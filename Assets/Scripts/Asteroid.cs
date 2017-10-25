@@ -10,8 +10,7 @@ public class Asteroid : MonoBehaviour {
 		Rigidbody rb = GetComponent<Rigidbody> ();
 		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
 
-		rb.velocity = transform.forward * speed;
+		rb.velocity = -transform.forward * speed; // -forward means backwards
 	}
-
 
 }

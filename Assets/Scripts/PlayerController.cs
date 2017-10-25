@@ -9,11 +9,10 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate () {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
 
 		Rigidbody rb = GetComponent<Rigidbody> ();
 
-		rb.velocity = new Vector3 (moveHorizontal, 0.0f, moveVertical) * speed;
+		rb.velocity = new Vector3 (moveHorizontal, 0.0f, transform.position.z) * speed;
 
 		rb.position = new Vector3(
 			Mathf.Clamp(rb.position.x, xMin, xMax),
