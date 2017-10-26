@@ -6,12 +6,12 @@ public class PlayerController : MonoBehaviour {
 	public float tilt;
 	public int speed;
 	public float xMin, xMax; // boundary
+	public float yMin, yMax;
 
 
 	public GameObject bullet;
 	public Transform bulletSpawn;
 	public float fireRate;
-	public int bulletSpeed;
 
 	private float nextFire;
 
@@ -19,8 +19,6 @@ public class PlayerController : MonoBehaviour {
 		if (Time.time > nextFire ) {
 			nextFire = Time.time + fireRate;
 			Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
-			Rigidbody bulletRigidBody = bullet.GetComponent<Rigidbody> ();
-			bulletRigidBody.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletSpeed;
 			//GetComponent<AudioSource>().Play ();
 		}
 	}
@@ -35,7 +33,7 @@ public class PlayerController : MonoBehaviour {
 
 		rb.position = new Vector3(
 			Mathf.Clamp(rb.position.x, xMin, xMax),
-			Mathf.Clamp(rb.position.x, xMin/2, xMax/2),
+			Mathf.Clamp(rb.position.y, yMin, yMax),
 			0.0f
 		);
 

@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 	public GameObject[] hazards;
 	public Vector3 spawnValues;
 	[SerializeField] private float spawnVariationZ;
+	[SerializeField] private float spawnVariationY;
 	public int hazardCount;
 	public GameObject hazard;
 	public float spawnWait;
@@ -38,8 +39,8 @@ public class GameController : MonoBehaviour {
 				//GameObject hazard = hazards [Random.Range (0, hazards.Length)];
 				Vector3 spawnPosition = new Vector3 (
 					Random.Range (-spawnValues.x, spawnValues.x), 
-					Random.Range (-spawnValues.x/2, spawnValues.x/2), 
-					Random.Range (-spawnValues.z, spawnValues.z + spawnVariationZ)
+					Random.Range (spawnValues.y, spawnValues.y + spawnVariationY), 
+					Random.Range (spawnValues.z, spawnValues.z + spawnVariationZ)
 				);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
