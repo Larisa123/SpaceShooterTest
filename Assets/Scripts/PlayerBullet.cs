@@ -5,6 +5,7 @@ public class PlayerBullet : MonoBehaviour {
 	public int bulletImpulse;
 	public int removeBulletZ;
 
+
 	// Use this for initialization
 	void Start () {
 		Rigidbody rb = GetComponent<Rigidbody> ();
@@ -20,9 +21,13 @@ public class PlayerBullet : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		if (collision.collider.tag == "Asteroid") {
-			Destroy (this.gameObject);
-			DestroyObject (collision.collider.gameObject);
+			explodeBullet (collision.collider.gameObject);
+
 		}
 	}
 
+	void explodeBullet (GameObject bullet) {
+		Destroy (this.gameObject);
+		DestroyObject (bullet);
+	}
 }

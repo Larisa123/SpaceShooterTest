@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 	public float fireRate;
 	private float nextFire;
 
+
 	void Start() {
 		rb = GetComponent<Rigidbody> ();
 
@@ -92,6 +93,7 @@ public class PlayerController : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		Debug.Log (collision.collider.tag);
+
 	}
 
 }
