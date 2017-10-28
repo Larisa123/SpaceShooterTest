@@ -87,4 +87,11 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+
+	// Asteroids:
+
+	void OnCollisionEnter(Collision collision) {
+		Debug.Log (collision.collider.tag);
+	}
+
 }

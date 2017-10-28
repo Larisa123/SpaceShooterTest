@@ -2,13 +2,14 @@
 using System.Collections;
 
 public class PlayerBullet : MonoBehaviour {
-	public int bulletSpeed;
+	public int bulletImpulse;
 	public int removeBulletZ;
 
 	// Use this for initialization
 	void Start () {
 		Rigidbody rb = GetComponent<Rigidbody> ();
-		rb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletSpeed;
+		rb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletImpulse;
+		rb.AddForce (0.0f, 0.0f, bulletImpulse, ForceMode.Impulse);
 	}
 
 
@@ -18,7 +19,10 @@ public class PlayerBullet : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		Debug.Log (collision.collider.tag);
+		if (collision.collider.tag == "Asteroid") {
+			Destroy (this.gameObject);
+			DestroyObject (collision.collider.gameObject);
+		}
 	}
 
 }

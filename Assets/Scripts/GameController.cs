@@ -3,12 +3,11 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
-	// Hazards:
+	// ASTEROIDS:
 	public float spawnWait;
 	public float startWait;
 	public float waveWait;
 
-	// ASTEROIDS:
 	public Vector3 spawnValues;
 	[SerializeField] private float spawnVariationZ;
 	[SerializeField] private float spawnVariationY;
@@ -46,9 +45,7 @@ public class GameController : MonoBehaviour {
 			yield return new WaitForSeconds (waveWait);
 		}
 	}
-
-	// Bullets:
-
+		
 	public void instantiateAsteroid() {
 		Vector3 spawnPosition = new Vector3 (
 			Random.Range (-spawnValues.x, spawnValues.x), 
