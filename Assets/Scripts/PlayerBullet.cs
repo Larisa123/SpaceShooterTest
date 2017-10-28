@@ -17,5 +17,8 @@ public class PlayerBullet : MonoBehaviour {
 			Destroy (this.gameObject);
 	}
 
+	void OnCollisionEnter(Collision collision) {
+		Debug.Log (collision.collider.tag);
+	}
 
 }

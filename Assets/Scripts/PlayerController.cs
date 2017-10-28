@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//public struct BulletType {
+//}
+
 public class PlayerController : MonoBehaviour {
 
 	// Player - SHIP:
@@ -40,12 +43,12 @@ public class PlayerController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
-		rb.velocity = new Vector3 (moveHorizontal, moveVertical, 0.0f) * speed;
+		rb.velocity = new Vector3 (moveHorizontal * speed, moveVertical * speed, rb.velocity.z);
 
 		rb.position = new Vector3(
 			Mathf.Clamp(rb.position.x, xMin, xMax),
 			Mathf.Clamp(rb.position.y, yMin, yMax),
-			0.0f
+			Mathf.Clamp(rb.position.z, -2.0f, 0.0f)
 		);
 
 		rb.rotation = Quaternion.Euler (0.0f, 0.0f, rb.velocity.x * -tilt);
@@ -66,8 +69,11 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator thrustPlayerBack () {
 		rb.velocity = -transform.forward * backThrust;
+		Debug.Log ("pushed it back");
+		yield return new WaitForSeconds (backThrustTime / 3);
+		rb.velocity = new Vector3 (transform.position.x, transform.position.y, 0.0f);
 		yield return new WaitForSeconds (backThrustTime);
-		rb.velocity = transform.forward * backThrust;
+		rb.position = new Vector3 (transform.position.x, transform.position.y, 0.0f);
 	}
 
 	// Bullets:
@@ -77,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 			nextFire = Time.time + fireRate;
 			Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
 			//GetComponent<AudioSource>().Play (); // sound effect
-			StartCoroutine(thrustPlayerBack());
+			//StartCoroutine(thrustPlayerBack());
 		}
 	}
 
