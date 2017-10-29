@@ -15,19 +15,21 @@ public class PlayerBullet : MonoBehaviour {
 
 
 	void Update() {
+		checkIfOutOfBounds ();
+	}
+
+	/*
+	void OnCollisionEnter(Collision collision) {
+		if (collision.collider.tag == "Asteroid") {
+			Destroy (this.gameObject);
+
+		}
+	}
+	*/
+
+	void checkIfOutOfBounds() {
 		if (transform.position.z > removeBulletZ)
 			Destroy (this.gameObject);
 	}
 
-	void OnCollisionEnter(Collision collision) {
-		if (collision.collider.tag == "Asteroid") {
-			explodeBullet (collision.collider.gameObject);
-
-		}
-	}
-
-	void explodeBullet (GameObject bullet) {
-		Destroy (this.gameObject);
-		DestroyObject (bullet);
-	}
 }

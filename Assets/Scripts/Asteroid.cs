@@ -25,15 +25,15 @@ public class Asteroid : MonoBehaviour {
 			Destroy (gameObject);
 	}
 
-	void explodeAsteroid (GameObject asteroid) {
+	void explode () {
+		Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation);
 		Destroy (this.gameObject);
-		DestroyObject (asteroid);
-		Instantiate (asteroidExplosion, asteroid.transform.position, asteroid.transform.rotation);
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		if (collision.collider.tag == "PlayerBullet") {
-			explodeAsteroid (collision.collider.gameObject);
+		if (collision.collider.tag == "Player Bullet") {
+			Destroy (collision.collider.gameObject);
+			explode ();
 
 		}
 	}

@@ -70,7 +70,6 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator thrustPlayerBack () {
 		rb.velocity = -transform.forward * backThrust;
-		Debug.Log ("pushed it back");
 		yield return new WaitForSeconds (backThrustTime / 3);
 		rb.velocity = new Vector3 (transform.position.x, transform.position.y, 0.0f);
 		yield return new WaitForSeconds (backThrustTime);
