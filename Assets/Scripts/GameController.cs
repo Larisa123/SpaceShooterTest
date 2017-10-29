@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour {
 	public Score scoringSystem;
 
 	void Start () {
-		scoringSystem = Score ();
+		scoringSystem = GetComponent<Score> ();
 		StartCoroutine (SpawnWaves ());
 	}
 
@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour {
 	*/
 
 	public void gameOver() {
+		Debug.Log ("Game over");
 	}
 
 	// Asteroids:

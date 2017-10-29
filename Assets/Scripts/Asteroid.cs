@@ -14,6 +14,7 @@ public class Asteroid : MonoBehaviour {
 	public GameController gameController;
 
 	void Start () {
+		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody> ();
 		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
 		rb.velocity = -transform.forward * speed; // -forward means backwards
