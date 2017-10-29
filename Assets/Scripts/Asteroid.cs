@@ -10,6 +10,8 @@ public class Asteroid : MonoBehaviour {
 	public GameObject asteroidExplosion;
 
 
+	// GameController:
+	public GameController gameController;
 
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
@@ -20,9 +22,16 @@ public class Asteroid : MonoBehaviour {
 	}
 
 	void Update() {
+		checkIfAsteroidOutOfBounds ();
+	}
 
-		if (transform.position.z < asteroidDisapearZ)
+	void checkIfAsteroidOutOfBounds() {
+		if (transform.position.z < asteroidDisapearZ) {
+			gameController.scoringSystem.reduceScore ();
+			if (gameController.scoringSystem.checkIfGameOver())
+				gameController.gameOver ();
 			Destroy (gameObject);
+		}
 	}
 
 	void explode () {
@@ -32,9 +41,14 @@ public class Asteroid : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		if (collision.collider.tag == "Player Bullet") {
-			Destroy (collision.collider.gameObject);
-			explode ();
+			playerHitAsteroid (collision.collider.gameObject);
 
 		}
+	}
+
+	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
+		gameController.scoringSystem.increaseScore (); 
+		Destroy (bullet);
+		explode ();
 	}
 }

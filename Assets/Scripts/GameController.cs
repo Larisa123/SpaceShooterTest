@@ -14,8 +14,11 @@ public class GameController : MonoBehaviour {
 	public int asteroidCount;
 	public GameObject asteroid;
 
-	void Start () {
+	// Score:
+	public Score scoringSystem;
 
+	void Start () {
+		scoringSystem = Score ();
 		StartCoroutine (SpawnWaves ());
 	}
 
@@ -31,6 +34,9 @@ public class GameController : MonoBehaviour {
 		}
 	}
 	*/
+
+	public void gameOver() {
+	}
 
 	// Asteroids:
 
