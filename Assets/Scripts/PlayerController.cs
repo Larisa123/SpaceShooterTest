@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 	public float yMin, yMax; // player boundary
 	private Rigidbody rb;
 	//private bool movingRight = false;
-
+	public GameObject playerExplosion;
 
 
 	// BULLET:
@@ -24,8 +24,12 @@ public class PlayerController : MonoBehaviour {
 	public float fireRate;
 	private float nextFire;
 
+	//Game:
+	public GameController gameController;
+
 
 	void Start() {
+		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody> ();
 
 	}
@@ -36,6 +40,13 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate () {
 		movePlayer ();
+	}
+
+	void OnCollisionEnter(Collision collision) {
+		if (collision.collider.tag == "Player Bullet") {
+			playerHitAsteroid (collision.collider.gameObject);
+
+		}
 	}
 
 	// Move player:
@@ -90,9 +101,17 @@ public class PlayerController : MonoBehaviour {
 
 	// Asteroids:
 
-	void OnCollisionEnter(Collision collision) {
-		Debug.Log (collision.collider.tag);
 
+	void explode () {
+		Instantiate (playerExplosion, this.transform.position, this.transform.rotation);
+		Destroy (this.gameObject);
+	}
+
+	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
+		gameController.gameOver();
+		Destroy (bullet);
+
+		explode ();
 	}
 
 }

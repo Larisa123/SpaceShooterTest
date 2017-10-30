@@ -18,8 +18,8 @@ public class Score : MonoBehaviour {
 	}
 
 	public int getScore () { return score; }
-	public void increaseScore() { this.score++; }
-	public void reduceScore() { this.score--; }
+	public void increaseScore() { this.score++; Debug.Log(getScore());}
+	public void reduceScore() { this.score--; Debug.Log(getScore());}
 	void resetScore() { this.score = 0; }
 
 	public int getLevel() { return level; }

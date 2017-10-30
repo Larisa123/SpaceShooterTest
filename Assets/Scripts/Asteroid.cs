@@ -37,6 +37,7 @@ public class Asteroid : MonoBehaviour {
 
 	void explode () {
 		Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation);
+		//Destroy (asteroidExplosion, 1.0f);
 		Destroy (this.gameObject);
 	}
 
