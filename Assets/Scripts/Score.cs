@@ -50,4 +50,14 @@ public class Score : MonoBehaviour {
 			return true;
 		} else return false;
 	}
+		
+	public string prepareForGUI() {
+		if (score < 10)
+			return string.Format ("00{0}", score);
+		if (score >= 10 && score < 100) 
+			return string.Format ("0{0}", score);
+		if (score >= 100 && score < 1000)
+			return score.ToString ();
+		return string.Format ("999"); // tu se bo igra zaekrat ustavila
+	}
 }
