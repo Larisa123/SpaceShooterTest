@@ -8,16 +8,18 @@ public class Asteroid : MonoBehaviour {
 	//public float timeRequiredToScale;
 	private Rigidbody rb;
 	public GameObject asteroidExplosion;
+	private GameObject player; // ship
 
 
 	// GameController:
-	public GameController gameController;
+	private GameController gameController;
 
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
+		player = GameObject.FindGameObjectWithTag("Player") as GameObject;
 		rb = GetComponent<Rigidbody> ();
 		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
-		rb.velocity = -transform.forward * speed; // -forward means backwards
+		rb.velocity = (player.transform.position - transform.position).normalized * speed; 
 
 		//transform.localScale = Vector3.Lerp (transform.localScale * scaleMultiplier, transform.localScale, timeRequiredToScale);
 	}

@@ -8,9 +8,8 @@ public class GameController : MonoBehaviour {
 	public float startWait;
 	public float waveWait;
 
-	public Vector3 spawnValues;
-	[SerializeField] private float spawnVariationZ;
-	[SerializeField] private float spawnVariationY;
+	public Vector3 asteroidSpawnMax;
+	public Vector3 asteroidSpawnMin;
 	public int asteroidCount;
 	public GameObject asteroid;
 
@@ -55,9 +54,9 @@ public class GameController : MonoBehaviour {
 		
 	public void instantiateAsteroid() {
 		Vector3 spawnPosition = new Vector3 (
-			Random.Range (-spawnValues.x, spawnValues.x), 
-			Random.Range (spawnValues.y, spawnValues.y + spawnVariationY), 
-			Random.Range (spawnValues.z, spawnValues.z + spawnVariationZ)
+			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
+			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
+			Random.Range (asteroidSpawnMin.z, asteroidSpawnMax.z)
 		);
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (asteroid, spawnPosition, spawnRotation);

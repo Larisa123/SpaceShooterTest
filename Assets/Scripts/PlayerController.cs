@@ -11,8 +11,8 @@ public class PlayerController : MonoBehaviour {
 	public float backThrust; // when player shoots a bullet
 	public float backThrustTime;
 	public float speed;
-	public float xMin, xMax; // player boundary
-	public float yMin, yMax; // player boundary
+	public Vector3 playerBoundaryMin; // player boundary
+	public Vector3 playerBoundaryMax; // player boundary
 	private Rigidbody rb;
 	//private bool movingRight = false;
 	public GameObject playerExplosion;
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Start() {
-		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
+		//gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody> ();
 
 	}
@@ -58,9 +58,9 @@ public class PlayerController : MonoBehaviour {
 		rb.velocity = new Vector3 (moveHorizontal * speed, moveVertical * speed, rb.velocity.z);
 
 		rb.position = new Vector3(
-			Mathf.Clamp(rb.position.x, xMin, xMax),
-			Mathf.Clamp(rb.position.y, yMin, yMax),
-			Mathf.Clamp(rb.position.z, -2.0f, 0.0f)
+			Mathf.Clamp(rb.position.x, playerBoundaryMin.x, playerBoundaryMax.x),
+			Mathf.Clamp(rb.position.y, playerBoundaryMin.y, playerBoundaryMax.y),
+			Mathf.Clamp(rb.position.z, playerBoundaryMin.z, playerBoundaryMax.z)
 		);
 
 		rb.rotation = Quaternion.Euler (0.0f, 0.0f, rb.velocity.x * -tilt);
