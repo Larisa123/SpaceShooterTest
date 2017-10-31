@@ -7,6 +7,9 @@ public class Score : MonoBehaviour {
 	private int score;
 	private int level;
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
+	public GameObject UIImage1;
+	public GameObject UIImage2;
+	public GameObject UIImage3;
 
 	void Start() {
 		resetScoringSystem (); // initializes the score and level
@@ -51,7 +54,7 @@ public class Score : MonoBehaviour {
 		} else return false;
 	}
 		
-	public string prepareForGUI() {
+	private string GUI() {
 		if (score < 10)
 			return string.Format ("00{0}", score);
 		if (score >= 10 && score < 100) 
@@ -59,5 +62,9 @@ public class Score : MonoBehaviour {
 		if (score >= 100 && score < 1000)
 			return score.ToString ();
 		return string.Format ("999"); // tu se bo igra zaekrat ustavila
+	}
+
+	public void updateGUI() {
+		
 	}
 }
