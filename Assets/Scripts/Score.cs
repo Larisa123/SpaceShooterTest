@@ -8,14 +8,16 @@ public class Score : MonoBehaviour {
 	private int score;
 	private int level;
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
-	public RectTransform UIImage1Pos;
-	public RectTransform UIImage2Pos;
-	public RectTransform UIImage3Pos;
-	private Image[] UIImages;
+	public Transform[] UIImagePositions;
+	public GameObject[] digitSprites;
+	//private Image[] UIImages;
+	public GameController gameController;
+
 
 	void Start() {
+		gameController = GetComponent<GameController> ();
 		resetScoringSystem (); // initializes the score and level
-		createUIImages();
+		//createUIImages();
 	}
 
 	public void resetScoringSystem() {
@@ -24,9 +26,9 @@ public class Score : MonoBehaviour {
 	}
 
 	public int getScore () { return score; }
-	public void increaseScore() { this.score++; }
-	public void reduceScore() { this.score--; }
-	void resetScore() { this.score = 0; }
+	public void increaseScore() { this.score++; updateUI ();}
+	public void reduceScore() { this.score--; updateUI ();}
+	void resetScore() { this.score = 0; updateUI ();}
 
 	public int getLevel() { return level; }
 	void resetLevel() { this.level = 1;}
@@ -52,14 +54,14 @@ public class Score : MonoBehaviour {
 	// Game:
 
 	public bool checkIfGameOver() {
-		if (score < 0) {
+		if (getScore() < 0) {
 			return true;
 		} else return false;
 	}
 
 
 	// UI:
-
+	/*
 	private void createUIImages() {
 		UIImages = new Image[10]; // 9 digits + 0
 
@@ -67,24 +69,34 @@ public class Score : MonoBehaviour {
 			//UIImages [i] = Image (i.ToString);
 		}
 	}
+	*/
 		
 	private string UI() {
-		if (score < 10)
-			return string.Format ("00{0}", score);
-		if (score >= 10 && score < 100) 
-			return string.Format ("0{0}", score);
-		if (score >= 100 && score < 1000)
-			return score.ToString ();
+		int scr = getScore ();
+
+		if (scr < 10)
+			return string.Format ("00{0}", scr);
+		if (scr >= 10 && scr < 100) 
+			return string.Format ("0{0}", scr);
+		if (scr >= 100 && scr < 1000)
+			return scr.ToString ();
 		return string.Format ("999"); // tu se bo igra zaekrat ustavila
 	}
 
-	public void updateUI() {
-		string UIScore = UI ();
-		/*
-		string digit1 = UIScore [0].ToString();
-		string digit2 = UIScore [1].ToString();
-		string digit3 = UIScore [2].ToString();
+	private void updateUI() {
+		if (getScore () < 0) {
+			gameController.gameOver ();
+		} else {
+			string UIScore = UI ();
+			int index;
+			Debug.Log (UIScore);
 
-		UIImage1 = */
+			for (int i = 0; i < 3; i++) {
+				index = int.Parse (UIScore [i].ToString ());
+				GameObject sprite1 = digitSprites [index];
+				sprite1.transform.position = UIImagePositions[i].position;
+				sprite1.transform.SetAsFirstSibling ();
+			}
+		}
 	}
 }
