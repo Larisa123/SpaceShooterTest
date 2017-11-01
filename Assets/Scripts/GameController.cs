@@ -13,12 +13,47 @@ public class GameController : MonoBehaviour {
 	public int asteroidCount;
 	public GameObject asteroid;
 
+	// ENEMIES - DEMONS:
+	/*
+	public int maxDemonsOnScreen;
+	public int totalDemons;
+	public float minSpawnTime;
+	public float maxSpawnTime;
+	public int demonsPerSpawn;
+
+	private int demonsOnScreen = 0;
+	private float generatedSpawnTime = 0;
+	private float currentSpawnTime = 0;
+	*/
+
+	private int demonsOnScreen = 0;
+	public int maxDemonsOnScreen;
+	public int demonsPerSpawn;
+	public float spawnTime;
+
 	// Score:
 	public Score scoringSystem;
 
 	void Start () {
 		scoringSystem = GetComponent<Score> ();
+		Debug.Log (scoringSystem.getLevel ());
 		StartCoroutine (SpawnWaves ());
+		/*
+		switch (scoringSystem.getLevel ()) {
+		case 1: 
+			StartCoroutine (SpawnWaves ());
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		default: 
+			break;
+		}
+		*/
+
 	}
 
 	/*                        RESTART:

@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-
 public class Score : MonoBehaviour {
 	private int score;
 	private int level;
@@ -26,8 +25,8 @@ public class Score : MonoBehaviour {
 	}
 
 	public int getScore () { return score; }
-	public void increaseScore() { this.score++; updateUI ();}
-	public void reduceScore() { this.score--; updateUI ();}
+	public void increaseScore() { this.score++; updateUI (); checkForUpgrades ();}
+	public void reduceScore() { this.score--; updateUI (); checkForUpgrades ();}
 	void resetScore() { this.score = 0; updateUI ();}
 
 	public int getLevel() { return level; }
