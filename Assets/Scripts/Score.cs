@@ -71,7 +71,7 @@ public class Score : MonoBehaviour {
 	}
 	*/
 		
-	private string UI() {
+	private string getUIString() {
 		int scr = getScore ();
 
 		if (scr < 10)
@@ -87,15 +87,16 @@ public class Score : MonoBehaviour {
 		if (getScore () < 0) {
 			gameController.gameOver ();
 		} else {
-			string UIScore = UI ();
+			string UIScore = getUIString ();
 			int index;
-			Debug.Log (UIScore);
+			GameObject sprite;
 
 			for (int i = 0; i < 3; i++) {
 				index = int.Parse (UIScore [i].ToString ());
-				GameObject sprite1 = digitSprites [index];
-				sprite1.transform.position = UIImagePositions[i].position;
-				sprite1.transform.SetAsFirstSibling ();
+				Debug.Log (string.Format("Score: {0}, sprite index: {1}, image name: {2}", UIScore, index, UIImagePositions[i].name));
+				sprite = digitSprites [index];
+				sprite.transform.position = UIImagePositions[i].position;
+				sprite.transform.SetAsFirstSibling ();
 			}
 		}
 	}
