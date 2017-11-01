@@ -21,6 +21,8 @@ public class Asteroid : MonoBehaviour {
 		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
 		rb.velocity = (player.transform.position - transform.position).normalized * speed; 
 
+		// TO DO: make the asteroid come in the player boundary, not directlly the center
+
 		//transform.localScale = Vector3.Lerp (transform.localScale * scaleMultiplier, transform.localScale, timeRequiredToScale);
 	}
 
