@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour {
 	void Start () {
 		scoringSystem = GetComponent<Score> ();
 		Debug.Log (scoringSystem.getLevel ());
-		StartCoroutine (SpawnWaves ());
+		StartCoroutine (SpawnAsteroids ());
 		/*
 		switch (scoringSystem.getLevel ()) {
 		case 1: 
@@ -75,7 +75,7 @@ public class GameController : MonoBehaviour {
 
 	// Asteroids:
 
-	IEnumerator SpawnWaves () {
+	IEnumerator SpawnAsteroids () {
 		yield return new WaitForSeconds (startWait);
 		while (true) {
 			for (int i = 0; i < asteroidCount; i++)

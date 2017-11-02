@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBullet : MonoBehaviour {
+public class ShootBullet : MonoBehaviour {
 	public int bulletImpulse;
 	public int removeBulletZ;
 
@@ -16,6 +16,7 @@ public class PlayerBullet : MonoBehaviour {
 
 		switch (this.gameObject.tag) {
 		case "PlayerBullet":
+			
 			rb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletImpulse;
 			rb.AddForce (0.0f, 0.0f, bulletImpulse, ForceMode.Impulse);
 			break;

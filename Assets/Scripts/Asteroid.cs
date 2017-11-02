@@ -17,13 +17,17 @@ public class Asteroid : MonoBehaviour {
 	void Start () {
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		player = GameObject.FindGameObjectWithTag("Player") as GameObject;
-		rb = GetComponent<Rigidbody> ();
-		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
-		rb.velocity = (player.transform.position - transform.position).normalized * speed; 
+		giveAsteroidVelocity (); 
 
 		// TO DO: make the asteroid come in the player boundary, not directlly the center
 
 		//transform.localScale = Vector3.Lerp (transform.localScale * scaleMultiplier, transform.localScale, timeRequiredToScale);
+	}
+
+	void giveAsteroidVelocity() {
+		rb = GetComponent<Rigidbody> ();
+		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
+		rb.velocity = (player.transform.position - transform.position).normalized * speed; 
 	}
 
 	void Update() {
