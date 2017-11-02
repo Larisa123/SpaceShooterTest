@@ -50,7 +50,7 @@ public class Asteroid : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		if (collision.collider.tag == "Player Bullet") {
+		if (collision.collider.tag == "PlayerBullet") {
 			playerHitAsteroid (collision.collider.gameObject);
 
 		}
