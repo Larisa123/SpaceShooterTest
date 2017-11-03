@@ -45,7 +45,7 @@ public class Asteroid : MonoBehaviour {
 
 	void explode () {
 		Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation);
-		//Destroy (asteroidExplosion, 1.0f);
+		//Destroy (asteroidExplosion, 0.5f); // destroying assets not permitted to prevent data loss
 		Destroy (this.gameObject);
 	}
 
@@ -54,11 +54,21 @@ public class Asteroid : MonoBehaviour {
 			playerHitAsteroid (collision.collider.gameObject);
 
 		}
+		if (collision.collider.tag == "Player") {
+			asteroidHitSpaceship (collision.collider.gameObject);
+
+		}
 	}
 
 	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
 		gameController.scoringSystem.increaseScore (); 
 		Destroy (bullet);
 		explode ();
+	}
+
+	void asteroidHitSpaceship(GameObject player) {// player's bullet hit an asteroid
+		gameController.gameOver(); 
+		//Destroy (player);
+		explode (); // TO DO: USE PLAYER EXPLOSION
 	}
 }

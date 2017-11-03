@@ -13,7 +13,11 @@ public class GameController : MonoBehaviour {
 	public int asteroidCount;
 	public GameObject asteroid;
 
+
 	// ENEMIES - DEMONS:
+	public GameObject demon;
+	private int demonsOnScreen;
+	public int maxDemonsOnScreen;
 	/*
 	public int maxDemonsOnScreen;
 	public int totalDemons;
@@ -26,11 +30,12 @@ public class GameController : MonoBehaviour {
 	private float currentSpawnTime = 0;
 	*/
 
+	/*
 	private int demonsOnScreen = 0;
 	public int maxDemonsOnScreen;
 	public int demonsPerSpawn;
 	public float spawnTime;
-
+	*/
 	// Score:
 	public Score scoringSystem;
 
@@ -95,5 +100,18 @@ public class GameController : MonoBehaviour {
 		);
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (asteroid, spawnPosition, spawnRotation);
+		Instantiate(demon, spawnPosition, spawnRotation);
+	}
+
+	// Demons:
+
+	public void instantiateDemon() {
+		Vector3 spawnPosition = new Vector3 (
+			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
+			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
+			Random.Range (asteroidSpawnMin.z, asteroidSpawnMax.z)
+		);
+		Quaternion spawnRotation = Quaternion.identity;
+		Instantiate (demon, spawnPosition, spawnRotation);
 	}
 }
