@@ -92,7 +92,7 @@ public class Score : MonoBehaviour {
 
 			for (int i = 0; i < 3; i++) {
 				index = int.Parse (UIScore [i].ToString ());
-				Debug.Log (string.Format("Score: {0}, sprite index: {1}, image name: {2}", UIScore, index, UIImagePositions[i].name));
+				//Debug.Log (string.Format("Score: {0}, sprite index: {1}, image name: {2}", UIScore, index, UIImagePositions[i].name));
 				sprite = digitSprites [index];
 				sprite.transform.position = UIImagePositions[i].position;
 				sprite.transform.SetAsFirstSibling ();

@@ -50,8 +50,11 @@ public class Asteroid : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		if (collision.collider.tag == "Player Bullet") {
+		if (collision.collider.tag == "PlayerBullet") {
 			playerHitAsteroid (collision.collider.gameObject);
+
+		} else if (collision.collider.tag == "Player") {
+			asteroidHitPlayer(collision.collider.gameObject);
 
 		}
 	}
@@ -59,6 +62,12 @@ public class Asteroid : MonoBehaviour {
 	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
 		gameController.scoringSystem.increaseScore (); 
 		Destroy (bullet);
+		explode ();
+	}
+
+	void asteroidHitPlayer(GameObject player) {// player's bullet hit an asteroid
+		gameController.gameOver();
+		//Destroy (player);
 		explode ();
 	}
 }
