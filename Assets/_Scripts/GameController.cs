@@ -104,4 +104,9 @@ public class GameController : MonoBehaviour {
 	}
 
 
+	public void demonEnteredPlayersShiels(GameObject demon) {
+		Rigidbody demonRb = demon.GetComponent<Rigidbody> ();
+		demonRb.velocity = Vector3.zero; // TO DO: don't just stop it!
+	}
+
 }

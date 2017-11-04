@@ -44,7 +44,8 @@ public class PlayerController : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		if (collision.collider.tag == "DemonBullet") {
-			gameController.scoringSystem.reducePlayersHealth ();
+			demonHitPlayer (collision.collider.gameObject);
+
 
 		} 
 	}
@@ -84,6 +85,13 @@ public class PlayerController : MonoBehaviour {
 			//GetComponent<AudioSource>().Play (); // sound effect
 			//StartCoroutine(thrustPlayerBack());
 		}
+	}
+
+	// Demon Bullets:
+
+	void demonHitPlayer(GameObject demonBullet) {
+		Destroy (demonBullet);
+		gameController.scoringSystem.reducePlayersHealth ();
 	}
 
 

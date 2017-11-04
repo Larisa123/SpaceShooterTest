@@ -9,6 +9,7 @@ public class Demon : MonoBehaviour {
 
 	public GameObject fireAnimation;
 	public GameObject bullet; // not really a bullet, but I will use this name for convention
+	public int demonSpeed;
 	public float fireRate;
 	//private float nextFire;
 	//public float fireRate;
@@ -18,7 +19,7 @@ public class Demon : MonoBehaviour {
 	void Start() {
 		playerPos = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform> ();
 		animator = GetComponent<Animator> ();
-		animator.Play ("demonAttact");
+		//animator.Play ("demonAttact");
 		//fireAnimation.Play ();
 		StartCoroutine (shootBulletsCoroutine());
 	}
@@ -26,6 +27,11 @@ public class Demon : MonoBehaviour {
 
 	void Update () {
 		this.gameObject.transform.LookAt (playerPos);
+	}
+
+	void giveDemonVelocity() {
+		Rigidbody rb = GetComponent<Rigidbody> ();
+		rb.velocity = (playerPos.position - transform.position).normalized * demonSpeed; 
 	}
 
 	IEnumerator shootBulletsCoroutine () {
@@ -45,4 +51,5 @@ public class Demon : MonoBehaviour {
 		}
 	}
 	*/
+
 }
