@@ -4,18 +4,20 @@ using System.Collections;
 public class ShootBullet : MonoBehaviour {
 	public int bulletImpulse;
 	public int removeBulletZ;
-	private GameObject demon;
+	public float fireRate;
+	public Rigidbody rb;
+
+	//private GameObject demon;
 
 
 	// Use this for initialization
 	void Start () {
-		demon = GameObject.FindGameObjectWithTag("Demon");
-		//if (this.gameObject.tag == "PlayerBullet")
-		shoot ();
+		rb = GetComponent<Rigidbody> ();
+		//demon = GameObject.FindGameObjectWithTag("Demon");
+		addBulletVelocity ();
 	}
 
-	public void shoot() {
-		Rigidbody rb = GetComponent<Rigidbody> ();
+	public void addBulletVelocity() {
 
 		switch (this.gameObject.tag) {
 		case "PlayerBullet":
@@ -23,18 +25,14 @@ public class ShootBullet : MonoBehaviour {
 			//rb.AddForce (0.0f, 0.0f, bulletImpulse, ForceMode.Impulse);
 			break;
 		case "DemonBullet":
-			//Transform bulletSpawn = GameObject.FindGameObjectWithTag ("DemonBulletSpawn").GetComponent<Transform> ();
-			//GameObject bullet = Instantiate (this.gameObject, bulletSpawn.position, bulletSpawn.rotation) as GameObject;
-			//Rigidbody bulletRb = bullet.GetComponent<Rigidbody> (); 
-			//rb.velocity = demon.transform.forward * bulletImpulse;
-			rb.velocity = new Vector3 (0.0f, 0.0f, -1.0f) * bulletImpulse;
+			Transform playerPos = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform> ();
+			rb.velocity = (playerPos.position - transform.position).normalized * bulletImpulse;
 			//rb.AddForce (demon.transform.forward * bulletImpulse, ForceMode.Impulse);
 			break;
 		default:
 			break;
 		}
 	}
-
 
 	void Update() {
 		checkIfOutOfBounds ();

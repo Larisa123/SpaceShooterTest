@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Score : MonoBehaviour {
 	private int score;
 	private int level;
+	private float playersHealth; // from 0 to 1
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
 	public Transform[] UIImagePositions;
 	public GameObject[] digitSprites;
@@ -22,6 +23,7 @@ public class Score : MonoBehaviour {
 	public void resetScoringSystem() {
 		resetScore ();
 		resetLevel ();
+		resetPlayersHealth ();
 	}
 
 	public int getScore () { return score; }
@@ -48,6 +50,24 @@ public class Score : MonoBehaviour {
 		} else {
 			level = 6;
 		}
+	}
+
+	// Player:
+
+	public void reducePlayersHealth() {
+		if (playersHealth > 0.2f)
+			playersHealth -= 0.2f;
+		Debug.Log ("Players health decreased");
+	}
+
+	public void increasePlayersHealth() {
+		if (playersHealth < 0.8f)
+			playersHealth += 0.2f;
+		Debug.Log ("Players health decreased");
+	}
+
+	public void resetPlayersHealth() {
+		playersHealth = 1.0f;
 	}
 
 	// Game:

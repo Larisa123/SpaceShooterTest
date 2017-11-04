@@ -43,10 +43,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		if (collision.collider.tag == "PlayerBullet") {
-			playerHitAsteroid (collision.collider.gameObject);
+		if (collision.collider.tag == "DemonBullet") {
+			gameController.scoringSystem.reducePlayersHealth ();
 
-		}
+		} 
 	}
 
 	// Move player:
@@ -65,18 +65,6 @@ public class PlayerController : MonoBehaviour {
 
 		rb.rotation = Quaternion.Euler (0.0f, 0.0f, rb.velocity.x * -tilt);
 
-		/*              /// Z silami:
-		 * 
-		bool wantsToGoRight = moveHorizontal > 0.0f;
-		if ((wantsToGoRight && !movingRight) || (!wantsToGoRight && movingRight))
-			rb.velocity = Vector3.zero; // vstavimo ga, ce hoce menjati smer
-		//Vector3 velocity = new Vector3 (moveHorizontal, moveVertical, 0.0f) * speed;
-		Quaternion rotation = Quaternion.Euler (0.0f, 0.0f, rb.velocity.x * -tilt);
-		//rb.AddForce (velocity);
-		rb.AddForce(moveHorizontal * speed, moveVertical * speed, 0.0f, ForceMode.Impulse);
-		movingRight = moveHorizontal > 0.0f;
-
-		*/
 	}
 
 	IEnumerator thrustPlayerBack () {
@@ -105,13 +93,6 @@ public class PlayerController : MonoBehaviour {
 	void explode () {
 		Instantiate (playerExplosion, this.transform.position, this.transform.rotation);
 		Destroy (this.gameObject);
-	}
-
-	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
-		gameController.gameOver();
-		Destroy (bullet);
-
-		explode ();
 	}
 
 }

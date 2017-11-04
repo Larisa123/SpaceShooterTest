@@ -4,20 +4,23 @@ using System.Collections;
 
 public class Demon : MonoBehaviour {
 
-	public Transform playerPos;
+	private Transform playerPos;
 	//public Transform spawnPos;
 
 	public GameObject fireAnimation;
 	public GameObject bullet; // not really a bullet, but I will use this name for convention
+	public float fireRate;
+	//private float nextFire;
+	//public float fireRate;
 
-	public Animator animator;
+	private Animator animator;
 
 	void Start() {
 		playerPos = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform> ();
 		animator = GetComponent<Animator> ();
 		animator.Play ("demonAttact");
 		//fireAnimation.Play ();
-
+		StartCoroutine (shootBulletsCoroutine());
 	}
 
 
@@ -25,9 +28,21 @@ public class Demon : MonoBehaviour {
 		this.gameObject.transform.LookAt (playerPos);
 	}
 
-	public void shootBullet() {
-		Instantiate(bullet, this.gameObject.transform.position,  this.gameObject.transform.rotation);
-		//GetComponent<AudioSource>().Play (); // sound effect
-		//StartCoroutine(thrustPlayerBack());
+	IEnumerator shootBulletsCoroutine () {
+		Instantiate(bullet, this.gameObject.transform.position, this.gameObject.transform.rotation);
+		yield return new WaitForSeconds (fireRate);
+
 	}
+
+	/*
+
+	public void shootBullet() {
+		if (Time.time > nextFire ) {
+			nextFire = Time.time + fireRate;
+			Instantiate(bullet, this.gameObject.transform.position,  this.gameObject.transform.rotation);
+			//GetComponent<AudioSource>().Play (); // sound effect
+			//StartCoroutine(thrustPlayerBack());
+		}
+	}
+	*/
 }
