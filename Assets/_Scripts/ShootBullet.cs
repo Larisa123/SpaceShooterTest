@@ -5,7 +5,7 @@ public class ShootBullet : MonoBehaviour {
 	public int bulletImpulse;
 	public int removeBulletZ;
 	public float fireRate;
-	public Rigidbody rb;
+	private Rigidbody rb;
 
 	//private GameObject demon;
 
@@ -27,6 +27,8 @@ public class ShootBullet : MonoBehaviour {
 		case "DemonBullet":
 			Transform playerPos = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform> ();
 			rb.velocity = (playerPos.position - transform.position).normalized * bulletImpulse;
+
+			// TO DO: add particle effects: naj zgleda, kot da jih dejansko izstreluje
 			//rb.AddForce (demon.transform.forward * bulletImpulse, ForceMode.Impulse);
 			break;
 		default:
