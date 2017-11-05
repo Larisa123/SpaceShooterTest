@@ -16,25 +16,8 @@ public class GameController : MonoBehaviour {
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private int demonsOnScreen;
-	public int maxDemonsOnScreen;
-	/*
-	public int maxDemonsOnScreen;
-	public int totalDemons;
-	public float minSpawnTime;
-	public float maxSpawnTime;
-	public int demonsPerSpawn;
+	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15}; // depends on the level
 
-	private int demonsOnScreen = 0;
-	private float generatedSpawnTime = 0;
-	private float currentSpawnTime = 0;
-	*/
-
-	/*
-	private int demonsOnScreen = 0;
-	public int maxDemonsOnScreen;
-	public int demonsPerSpawn;
-	public float spawnTime;
-	*/
 
 	// Score:
 	public Score scoringSystem;
@@ -43,6 +26,7 @@ public class GameController : MonoBehaviour {
 		scoringSystem = GetComponent<Score> ();
 		Debug.Log (scoringSystem.getLevel ());
 		StartCoroutine (SpawnAsteroids ());
+
 		/*
 		switch (scoringSystem.getLevel ()) {
 		case 1: 
@@ -85,14 +69,14 @@ public class GameController : MonoBehaviour {
 		while (true) {
 			for (int i = 0; i < asteroidCount; i++)
 			{
-				instantiateAsteroid ();
+				instantiateAsteroidAndDemon ();
 				yield return new WaitForSeconds (spawnWait);
 			}
 			yield return new WaitForSeconds (waveWait);
 		}
 	}
 		
-	public void instantiateAsteroid() {
+	public void instantiateAsteroidAndDemon() {
 		Vector3 spawnPosition = new Vector3 (
 			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
 			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
@@ -100,13 +84,32 @@ public class GameController : MonoBehaviour {
 		);
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (asteroid, spawnPosition, spawnRotation);
-		Instantiate (demon, spawnPosition, spawnRotation); // TO DO: DEMON IN NEW METHOD!
+		if (shouldCreateNewDemon())
+			instantiateDemon (spawnPosition, spawnRotation);
 	}
 
+	// Demons:
+
+	bool shouldCreateNewDemon() {
+		if (demonsOnScreen < getMaxDemonsOnScreen()) {
+			if (Random.Range (1, 10) % 2 == 0)  // just a random condition with probabilty of being true equal to 1/2
+				return true;
+		} // else:
+		return false;
+	}
+
+	void instantiateDemon(Vector3 spawnPosition, Quaternion spawnRotation) {
+		Instantiate (demon, spawnPosition, spawnRotation); // TO DO: DEMON IN NEW METHOD!
+		demonsOnScreen++;
+	}
 
 	public void demonEnteredPlayersShiels(GameObject demon) {
 		Rigidbody demonRb = demon.GetComponent<Rigidbody> ();
 		demonRb.velocity = Vector3.zero; // TO DO: don't just stop it!
+	}
+
+	int getMaxDemonsOnScreen() {
+		return maxDemonsOnScreen [scoringSystem.getLevel () - 1];
 	}
 
 }

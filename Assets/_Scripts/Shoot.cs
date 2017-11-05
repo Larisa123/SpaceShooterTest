@@ -8,6 +8,7 @@ public class Shoot : StateMachineBehaviour {
 
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 		Demon demon = GameObject.FindGameObjectWithTag("Demon").GetComponent<Demon> ();
+		demon.shootBullet ();
 		//demon.shootBullet ();
 	}
 }

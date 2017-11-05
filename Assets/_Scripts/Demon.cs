@@ -22,7 +22,7 @@ public class Demon : MonoBehaviour {
 		//animator.Play ("demonAttact");
 		//fireAnimation.Play ();
 		giveDemonVelocity();
-		StartCoroutine (shootBulletsCoroutine());
+		//StartCoroutine (shootBulletsCoroutine());
 	}
 
 
@@ -48,10 +48,15 @@ public class Demon : MonoBehaviour {
 		rb.velocity = (playerPos.position - transform.position).normalized * demonSpeed; 
 	}
 
+
 	IEnumerator shootBulletsCoroutine () {
-		Instantiate(bullet, this.gameObject.transform.position, this.gameObject.transform.rotation);
+		shootBullet ();
 		yield return new WaitForSeconds (fireRate);
 
+	}
+
+	public void shootBullet() { // actually a fireball
+		Instantiate(bullet, this.gameObject.transform.position, this.gameObject.transform.rotation);
 	}
 
 	/*
