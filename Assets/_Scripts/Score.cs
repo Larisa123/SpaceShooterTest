@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public enum GameState {
+	Start,
 	Tutorial, 
 	WelcomeScreen,
 	Playing,

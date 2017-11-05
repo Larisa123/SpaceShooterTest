@@ -9,7 +9,7 @@ public class Demon : MonoBehaviour {
 
 	public GameObject demonExplosion;
 	public GameObject bullet; // not really a bullet, but I will use this name for convention
-	public int demonSpeed;
+	public float demonSpeed;
 	public float fireRate;
 	public float startBulletShootWait;
 	//private float nextFire;
@@ -30,6 +30,7 @@ public class Demon : MonoBehaviour {
 
 	void Update () {
 		this.gameObject.transform.LookAt (playerPos);
+		transform.position = Vector3.Lerp(transform.position, playerPos.position, Time.deltaTime * demonSpeed);
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -48,8 +49,9 @@ public class Demon : MonoBehaviour {
 	void giveDemonVelocity() {
 		// TO DO: Use lerp or something instead of velocity, to go quickly at the beginning and slower after that
 		// choose spawn positions from which you will shoot, each one will get taken (stored in array) to prevent them shooting from the same point
-		Rigidbody rb = GetComponent<Rigidbody> ();
-		rb.velocity = (playerPos.position - transform.position).normalized * demonSpeed; 
+		//Rigidbody rb = GetComponent<Rigidbody> ();
+		//rb.velocity = (playerPos.position - transform.position).normalized * demonSpeed; 
+
 	}
 
 
@@ -63,7 +65,7 @@ public class Demon : MonoBehaviour {
 
 	public void shootBullet() { // actually a fireball
 		Debug.Log("shoot fireball in demon's courutine");
-		animator.Play("demonAttact");
+		animator.Play("demonAttack");
 		Instantiate(bullet, this.gameObject.transform.position, this.gameObject.transform.rotation);
 	}
 

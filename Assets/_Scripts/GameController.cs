@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private int demonsOnScreen;
-	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15}; // depends on the level
+	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
 
 
 	// Score:
@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour {
 
 	IEnumerator SpawnAsteroids () {
 		yield return new WaitForSeconds (startWait);
-		while (true) {
+		while (scoringSystem.gameState == GameState.Playing) {
 			for (int i = 0; i < asteroidCount; i++)
 			{
 				instantiateAsteroidAndDemon ();
