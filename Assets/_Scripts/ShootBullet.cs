@@ -4,7 +4,6 @@ using System.Collections;
 public class ShootBullet : MonoBehaviour {
 	public int bulletImpulse;
 	public int removeBulletZ;
-	public float fireRate;
 	private Rigidbody rb;
 
 	//private GameObject demon;

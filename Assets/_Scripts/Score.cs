@@ -2,16 +2,25 @@
 using System.Collections;
 using UnityEngine.UI;
 
+public enum GameState {
+	Tutorial, 
+	WelcomeScreen,
+	Playing,
+	GameOverScreen,
+}
+
 
 public class Score : MonoBehaviour {
 	private int score;
 	private int level;
+	private bool gamePlaying;
 	private float playersHealth; // from 0 to 1
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
 	public Transform[] UIImagePositions;
 	public GameObject[] digitSprites;
 	//private Image[] UIImages;
 	public GameController gameController;
+	public GameState gameState;
 
 
 	void Start() {
@@ -24,6 +33,7 @@ public class Score : MonoBehaviour {
 		resetScore ();
 		resetLevel ();
 		resetPlayersHealth ();
+		resetGameState ();
 	}
 
 	public int getScore () { return score; }
@@ -34,6 +44,9 @@ public class Score : MonoBehaviour {
 	public int getLevel() { return level; }
 	void resetLevel() { this.level = 1;}
 
+	void resetGameState() {
+		gameState = GameState.Playing;
+	}
 
 	void checkForUpgrades() {
 		int scr = getScore ();
