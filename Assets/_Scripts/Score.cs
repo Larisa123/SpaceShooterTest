@@ -17,17 +17,21 @@ public class Score : MonoBehaviour {
 	private bool gamePlaying;
 	private float playersHealth; // from 0 to 1
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
+
 	public Transform[] UIImagePositions;
-	public GameObject[] digitSprites;
-	//private Image[] UIImages;
+	public GameObject[] digitSprites1;
+	public GameObject[] digitSprites2;
+	public GameObject[] digitSprites3;
+	private GameObject[,] digitSprites;
+
 	public GameController gameController;
 	public GameState gameState;
 
 
 	void Start() {
 		gameController = GetComponent<GameController> ();
+		createDigitSpritesTable();
 		resetScoringSystem (); // initializes the score and level
-		//createUIImages();
 	}
 
 	public void resetScoringSystem() {
@@ -66,6 +70,10 @@ public class Score : MonoBehaviour {
 		}
 	}
 
+	void OnUpdate() {
+		updateUI ();
+	}
+
 	// Player:
 
 	public void reducePlayersHealth() {
@@ -90,6 +98,15 @@ public class Score : MonoBehaviour {
 		if (getScore() < 0) {
 			return true;
 		} else return false;
+	}
+
+	private void createDigitSpritesTable() {
+		digitSprites = new GameObject[3, 10];
+		for (int j=0; j < 10; j++) {
+			digitSprites [0, j] = digitSprites1[j];
+			digitSprites[1, j] = digitSprites2[j];
+			digitSprites[2, j] = digitSprites3[j];
+		}
 	}
 
 
@@ -121,15 +138,22 @@ public class Score : MonoBehaviour {
 			gameController.gameOver ();
 		} else {
 			string UIScore = getUIString ();
-			int index;
+			char[] digitCharArray;
+			int digit;
 			GameObject sprite;
 
 			for (int i = 0; i < 3; i++) {
-				index = int.Parse (UIScore [i].ToString ());
-				//Debug.Log (string.Format("Score: {0}, sprite index: {1}, image name: {2}", UIScore, index, UIImagePositions[i].name));
-				sprite = digitSprites [index];
-				sprite.transform.position = UIImagePositions[i].position;
-				sprite.transform.SetAsFirstSibling ();
+				digitCharArray = UIScore.ToCharArray();
+				digit = int.Parse (digitCharArray[i].ToString());
+				// deactivate all others digits and activate current digit
+				for (int j = 0; j < 10; j++) {
+					sprite = digitSprites [i, digit];
+					Debug.Log ("indeks: "+i+" "+digit + " " + sprite.name);
+					if (j == digit)
+						sprite.SetActive (true);
+					else
+						sprite.SetActive (false);
+				}
 			}
 		}
 	}
