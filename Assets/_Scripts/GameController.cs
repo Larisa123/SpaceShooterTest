@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+enum TutorialState {Start, HowToMove, HowToShoot, Finished}
+
 public class GameController : MonoBehaviour {
 
 	// ASTEROIDS:
@@ -19,6 +21,8 @@ public class GameController : MonoBehaviour {
 	private int demonCount;
 	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
 
+	//Player:
+	public PlayerController player;
 
 	// Score:
 	public Score scoringSystem;
@@ -27,23 +31,6 @@ public class GameController : MonoBehaviour {
 		scoringSystem = GetComponent<Score> ();
 		Debug.Log (scoringSystem.getLevel ());
 		StartCoroutine (SpawnAsteroids ());
-
-		/*
-		switch (scoringSystem.getLevel ()) {
-		case 1: 
-			StartCoroutine (SpawnWaves ());
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		default: 
-			break;
-		}
-		*/
-
 	}
 
 	/*                        RESTART:

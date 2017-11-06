@@ -61,6 +61,7 @@ public class Asteroid : MonoBehaviour {
 
 	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
 		gameController.scoringSystem.increaseScore (); 
+		gameController.reduceCounterOf ("Asteroid");
 		Destroy (bullet);
 		explode ();
 	}

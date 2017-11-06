@@ -39,11 +39,10 @@ public class Demon : MonoBehaviour {
 			bulletHitDemon(collider);
 	}
 
-	void bulletHitDemon(GameObject bullet) {
-		Debug.Log("Demon Destroyed");
-		Instantiate (demonExplosion, this.transform.position, this.transform.rotation);
-		Destroy (bullet);
-		Destroy (this.gameObject);
+	void bulletHitDemon(GameObject bulletInstance) {
+		gameController.reduceCounterOf ("Demon");
+		gameController.scoringSystem.increaseScore ();
+		explode (bulletInstance);
 	}
 
 	void giveDemonVelocity() {
@@ -51,7 +50,6 @@ public class Demon : MonoBehaviour {
 		// choose spawn positions from which you will shoot, each one will get taken (stored in array) to prevent them shooting from the same point
 		//Rigidbody rb = GetComponent<Rigidbody> ();
 		//rb.velocity = (playerPos.position - transform.position).normalized * demonSpeed; 
-
 	}
 
 
@@ -64,21 +62,13 @@ public class Demon : MonoBehaviour {
 	}
 
 	public void shootBullet() { // actually a fireball
-		Debug.Log("shoot fireball in demon's courutine");
 		animator.Play("demonAttack");
 		Instantiate(bullet, this.gameObject.transform.position, this.gameObject.transform.rotation);
 	}
 
-	/*
-
-	public void shootBullet() {
-		if (Time.time > nextFire ) {
-			nextFire = Time.time + fireRate;
-			Instantiate(bullet, this.gameObject.transform.position,  this.gameObject.transform.rotation);
-			//GetComponent<AudioSource>().Play (); // sound effect
-			//StartCoroutine(thrustPlayerBack());
-		}
+	void explode(GameObject bulletInstance) {
+		Instantiate (demonExplosion, this.transform.position, this.transform.rotation);
+		Destroy (bulletInstance);
+		Destroy (this.gameObject);
 	}
-	*/
-
 }

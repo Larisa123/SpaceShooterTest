@@ -3,9 +3,8 @@ using System.Collections;
 using UnityEngine.UI;
 
 public enum GameState {
-	Start,
-	Tutorial, 
 	WelcomeScreen,
+	Start,
 	Playing,
 	GameOverScreen,
 }
@@ -14,7 +13,6 @@ public enum GameState {
 public class Score : MonoBehaviour {
 	private int score;
 	private int level;
-	private bool gamePlaying;
 	private float playersHealth; // from 0 to 1
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
 
@@ -39,6 +37,7 @@ public class Score : MonoBehaviour {
 		resetLevel ();
 		resetPlayersHealth ();
 		resetGameState ();
+		gameController.player.resetBulletType ();
 	}
 
 	public int getScore () { return score; }
@@ -54,6 +53,7 @@ public class Score : MonoBehaviour {
 	}
 
 	void checkForUpgrades() {
+		int previousLevel = getLevel();
 		int scr = getScore ();
 		if (scr > 0 && scr <= lvlUpgPoints [0]) {
 			level = 1;
@@ -68,6 +68,13 @@ public class Score : MonoBehaviour {
 		} else {
 			level = 6;
 		}
+		if (getLevel () > previousLevel)
+			levelUpgraded ();
+	}
+
+	void levelUpgraded() {
+		// TO DO: show something on screen (as congratulations)
+		gameController.player.increaseBulletType ();
 	}
 
 	void OnUpdate() {

@@ -4,6 +4,8 @@ using System.Collections;
 //public struct BulletType {
 //}
 
+public enum BulletType {Regular, TwoRegular, ThreeRegular, ThreeRegularBigExplosion, SuperExplosion}
+
 public class PlayerController : MonoBehaviour {
 
 	// Player - SHIP:
@@ -16,11 +18,13 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody rb;
 	//private bool movingRight = false;
 	public GameObject playerExplosion;
+	public BulletType bulletType = BulletType.Regular;
 
 
 	// BULLET:
 	public GameObject bullet;
 	public Transform bulletSpawn;
+	public Transform[] bulletSpawnTwoBullets;
 	public float fireRate;
 	private float nextFire;
 
@@ -81,11 +85,62 @@ public class PlayerController : MonoBehaviour {
 	void shootBullets() {
 		if (Time.time > nextFire ) {
 			nextFire = Time.time + fireRate;
-			Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
-			//GetComponent<AudioSource>().Play (); // sound effect
-			//StartCoroutine(thrustPlayerBack());
+
+			if (bulletType == BulletType.Regular) {
+				shootRegularBullet ();
+			} else if (bulletType == BulletType.TwoRegular) {
+				shootTwoRegularBullets ();
+			} else if (bulletType == BulletType.ThreeRegular) {
+				shootRegularBullet ();
+				shootTwoRegularBullets ();
+			} else if (bulletType == BulletType.ThreeRegularBigExplosion) {
+				shootRegularBullet ();
+				shootTwoRegularBullets ();
+				//shootBigExplosion (); tu je treba preverit se da je ze cas za novo eksplozijo, ne gre na vsaki nextFire
+			}
 		}
 	}
+
+	void shootRegularBullet() {
+		Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
+		//GetComponent<AudioSource>().Play (); // sound effect
+		//StartCoroutine(thrustPlayerBack());
+	}
+
+	void shootTwoRegularBullets() {
+		foreach (Transform trans in bulletSpawnTwoBullets) {
+			Instantiate(bullet, trans.position, trans.rotation);
+		}
+	}
+
+	public void resetBulletType() {
+		bulletType = BulletType.Regular;
+	}
+
+	public void increaseBulletType() {
+		switch (bulletType) {
+		case BulletType.Regular:
+			bulletType = BulletType.TwoRegular;
+			break;
+		case BulletType.TwoRegular:
+			bulletType = BulletType.ThreeRegular;
+			break;
+		case BulletType.ThreeRegular:
+			bulletType = BulletType.ThreeRegularBigExplosion;
+			break;
+		case BulletType.ThreeRegularBigExplosion:
+			bulletType = BulletType.SuperExplosion;
+			break;
+		default:
+			break;
+		} 
+	}
+		
+	void explode () {
+		Instantiate (playerExplosion, this.transform.position, this.transform.rotation);
+		Destroy (this.gameObject);
+	}
+
 
 	// Demon Bullets:
 
@@ -93,14 +148,4 @@ public class PlayerController : MonoBehaviour {
 		Destroy (demonBullet);
 		gameController.scoringSystem.reducePlayersHealth ();
 	}
-
-
-	// Asteroids:
-
-
-	void explode () {
-		Instantiate (playerExplosion, this.transform.position, this.transform.rotation);
-		Destroy (this.gameObject);
-	}
-
 }
