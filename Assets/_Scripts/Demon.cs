@@ -11,6 +11,7 @@ public class Demon : MonoBehaviour {
 
 	public GameObject demonExplosion;
 	public GameObject bullet; // not really a bullet, but I will use this name for convention
+	public float bulletImpulse;
 	public float demonSpeed;
 	public float fireRate;
 	public float startBulletShootWait;
@@ -22,12 +23,14 @@ public class Demon : MonoBehaviour {
 	private GameController gameController;
 
 	void Start() {
-		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		playerScript = player.GetComponent<PlayerController> ();
-		playerPos = player.GetComponent<Transform> ();
-		setTargetPosition ();
-
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
+		playerScript = gameController.player.GetComponent<PlayerController> ();
+		playerPos = gameController.player.GetComponent<Transform> ();
+		setTargetPosition ();
+		if (gameController != null)
+			Debug.Log ("game obstaja");
+		else 
+			Debug.Log ("game ne obstaja");
 		//animator = GetComponent<Animator> ();
 
 
@@ -63,6 +66,7 @@ public class Demon : MonoBehaviour {
 	}
 
 	void giveDemonVelocity() {
+
 		// TO DO: Use lerp or something instead of velocity, to go quickly at the beginning and slower after that
 		// choose spawn positions from which you will shoot, each one will get taken (stored in array) to prevent them shooting from the same point
 		//Rigidbody rb = GetComponent<Rigidbody> ();
@@ -80,7 +84,9 @@ public class Demon : MonoBehaviour {
 
 	public void shootBullet() { // actually a fireball
 		animator.Play("demonAttack");
-		Instantiate(bullet, this.gameObject.transform.position, this.gameObject.transform.rotation);
+		GameObject bulletInstance = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
+		Rigidbody bulletInstanceRb = bulletInstance.GetComponent<Rigidbody> ();
+		bulletInstanceRb.velocity = (playerPos.position - transform.position).normalized * bulletImpulse;
 	}
 
 	void explode(GameObject bulletInstance) {

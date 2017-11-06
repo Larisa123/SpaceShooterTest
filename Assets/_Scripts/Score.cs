@@ -22,12 +22,12 @@ public class Score : MonoBehaviour {
 	public GameObject[] digitSprites3;
 	private GameObject[,] digitSprites;
 
-	private GameController gameController;
+	[SerializeField] private GameController gameController;
 	public GameState gameState;
 
 
 	void Start() {
-		gameController = GetComponent<GameController> ();
+		//gameController = GetComponent<GameController> ();
 		createDigitSpritesTable();
 		resetScoringSystem (); // initializes the score and level
 	}
@@ -36,7 +36,7 @@ public class Score : MonoBehaviour {
 		resetScore ();
 		resetLevel ();
 		resetPlayersHealth ();
-		//resetGameState ();
+		resetGameState ();
 		gameController.player.resetBulletType ();
 	}
 
@@ -155,7 +155,7 @@ public class Score : MonoBehaviour {
 				// deactivate all others digits and activate current digit
 				for (int j = 0; j < 10; j++) {
 					sprite = digitSprites [i, digit];
-					Debug.Log ("indeks: "+i+" "+digit + " " + sprite.name);
+					//Debug.Log ("indeks: "+i+" "+digit + " " + sprite.name);
 					if (j == digit)
 						sprite.SetActive (true);
 					else

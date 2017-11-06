@@ -12,14 +12,14 @@ public class GameController : MonoBehaviour {
 
 	public Vector3 asteroidSpawnMax;
 	public Vector3 asteroidSpawnMin;
-	private int asteroidCount;
+	private int asteroidCount = 0;
 	public int asteroidSpawnCount;
 	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
 
 	// ENEMIES - DEMONS:
 	public GameObject demon;
-	private int demonCount;
+	private int demonCount = 0;
 	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
 
 	//Player:
@@ -29,8 +29,6 @@ public class GameController : MonoBehaviour {
 	public Score scoringSystem;
 
 	void Start () {
-		scoringSystem = GetComponent<Score> ();
-		scoringSystem.resetGameState ();
 		resetCounters ();
 		StartCoroutine (SpawnAsteroids ());
 	}
@@ -55,7 +53,7 @@ public class GameController : MonoBehaviour {
 	// Asteroids:
 
 	IEnumerator SpawnAsteroids () {
-		Debug.Log (scoringSystem.gameState== GameState.Playing);
+		Debug.Log (scoringSystem.gameState == GameState.Playing);
 		//yield return new WaitForSeconds (startWait);
 		while (scoringSystem.gameState == GameState.Playing) {
 			for (int i = 0; i < asteroidSpawnCount; i++) {
@@ -77,12 +75,13 @@ public class GameController : MonoBehaviour {
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (asteroid, spawnPosition, spawnRotation);
 		increaseCounterOf ("Asteroid");
+
 		if (shouldCreateNewDemon())
 			instantiateDemon (spawnPosition, spawnRotation);
 	}
 
 	public void increaseCounterOf(string objectsTag) {
-		//Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
+		Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
 
 		if (objectsTag == "Asteroid")
 			asteroidCount++;
@@ -91,7 +90,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void reduceCounterOf(string objectsTag) {
-		//Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
+		Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
 		if (objectsTag == "Asteroid") {
 			if (asteroidCount > 0) 
 				asteroidCount--;
@@ -132,7 +131,6 @@ public class GameController : MonoBehaviour {
 	}
 
 	int getMaxDemonsOnScreen() {
-		Debug.Log (scoringSystem.getLevel ());
 		return maxDemonsOnScreen [scoringSystem.getLevel () - 1];
 	}
 
