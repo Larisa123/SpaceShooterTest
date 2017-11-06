@@ -30,6 +30,8 @@ public class Demon : MonoBehaviour {
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		//animator = GetComponent<Animator> ();
 
+
+
 		giveDemonVelocity();
 		StartCoroutine (shootBulletsCoroutine());
 	}

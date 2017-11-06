@@ -22,7 +22,7 @@ public class Score : MonoBehaviour {
 	public GameObject[] digitSprites3;
 	private GameObject[,] digitSprites;
 
-	public GameController gameController;
+	private GameController gameController;
 	public GameState gameState;
 
 
@@ -36,7 +36,7 @@ public class Score : MonoBehaviour {
 		resetScore ();
 		resetLevel ();
 		resetPlayersHealth ();
-		resetGameState ();
+		//resetGameState ();
 		gameController.player.resetBulletType ();
 	}
 
@@ -48,7 +48,7 @@ public class Score : MonoBehaviour {
 	public int getLevel() { return level; }
 	void resetLevel() { this.level = 1;}
 
-	void resetGameState() {
+	public void resetGameState() {
 		gameState = GameState.Playing;
 	}
 

@@ -12,7 +12,8 @@ public class GameController : MonoBehaviour {
 
 	public Vector3 asteroidSpawnMax;
 	public Vector3 asteroidSpawnMin;
-	public int asteroidCount;
+	private int asteroidCount;
+	public int asteroidSpawnCount;
 	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
 
@@ -29,7 +30,8 @@ public class GameController : MonoBehaviour {
 
 	void Start () {
 		scoringSystem = GetComponent<Score> ();
-		Debug.Log (scoringSystem.getLevel ());
+		scoringSystem.resetGameState ();
+		resetCounters ();
 		StartCoroutine (SpawnAsteroids ());
 	}
 
@@ -53,10 +55,10 @@ public class GameController : MonoBehaviour {
 	// Asteroids:
 
 	IEnumerator SpawnAsteroids () {
-		yield return new WaitForSeconds (startWait);
+		Debug.Log (scoringSystem.gameState== GameState.Playing);
+		//yield return new WaitForSeconds (startWait);
 		while (scoringSystem.gameState == GameState.Playing) {
-			for (int i = 0; i < asteroidCount; i++)
-			{
+			for (int i = 0; i < asteroidSpawnCount; i++) {
 				instantiateAsteroidAndDemon ();
 				yield return new WaitForSeconds (spawnWait);
 			}
@@ -80,6 +82,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void increaseCounterOf(string objectsTag) {
+		//Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
+
 		if (objectsTag == "Asteroid")
 			asteroidCount++;
 		if (objectsTag == "Demon")
@@ -87,6 +91,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void reduceCounterOf(string objectsTag) {
+		//Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
 		if (objectsTag == "Asteroid") {
 			if (asteroidCount > 0) 
 				asteroidCount--;
@@ -97,7 +102,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	public void resetCounterOf(string objectsTag) {
+	public void resetCounters() {
 		asteroidCount = 0;
 		demonCount = 0;
 	}
@@ -127,6 +132,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	int getMaxDemonsOnScreen() {
+		Debug.Log (scoringSystem.getLevel ());
 		return maxDemonsOnScreen [scoringSystem.getLevel () - 1];
 	}
 
