@@ -11,11 +11,12 @@ public class GameController : MonoBehaviour {
 	public Vector3 asteroidSpawnMax;
 	public Vector3 asteroidSpawnMin;
 	public int asteroidCount;
+	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
 
 	// ENEMIES - DEMONS:
 	public GameObject demon;
-	private int demonsOnScreen;
+	private int demonCount;
 	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
 
 
@@ -77,6 +78,8 @@ public class GameController : MonoBehaviour {
 	}
 		
 	public void instantiateAsteroidAndDemon() {
+		if (!shouldCreateNewAsteroid ())
+			return;
 		Vector3 spawnPosition = new Vector3 (
 			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
 			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
@@ -84,14 +87,44 @@ public class GameController : MonoBehaviour {
 		);
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (asteroid, spawnPosition, spawnRotation);
+		increaseCounterOf ("Asteroid");
 		if (shouldCreateNewDemon())
 			instantiateDemon (spawnPosition, spawnRotation);
+	}
+
+	public void increaseCounterOf(string objectsTag) {
+		if (objectsTag == "Asteroid")
+			asteroidCount++;
+		if (objectsTag == "Demon")
+			demonCount++;
+	}
+
+	public void reduceCounterOf(string objectsTag) {
+		if (objectsTag == "Asteroid") {
+			if (asteroidCount > 0) 
+				asteroidCount--;
+		}
+		if (objectsTag == "Demon") {
+			if (demonCount > 0) 
+				demonCount--;
+		}
+	}
+
+	public void resetCounterOf(string objectsTag) {
+		if (objectsTag == "Asteroid")
+			asteroidCount = 0;
+		if (objectsTag == "Demon")
+			demonCount = 0;
+	}
+
+	bool shouldCreateNewAsteroid() {
+		return asteroidCount < asteroidMaxOnScreen;
 	}
 
 	// Demons:
 
 	bool shouldCreateNewDemon() {
-		if (demonsOnScreen < getMaxDemonsOnScreen()) {
+		if (demonCount < getMaxDemonsOnScreen()) {
 			if (Random.Range (1, 10) % 2 == 0)  // just a random condition with probabilty of being true equal to 1/2
 				return true;
 		} // else:
@@ -100,7 +133,7 @@ public class GameController : MonoBehaviour {
 
 	void instantiateDemon(Vector3 spawnPosition, Quaternion spawnRotation) {
 		Instantiate (demon, spawnPosition, spawnRotation); // TO DO: DEMON IN NEW METHOD!
-		demonsOnScreen++;
+		increaseCounterOf("Demon");
 	}
 
 	public void demonEnteredPlayersShiels(GameObject demon) {
