@@ -20,7 +20,8 @@ public class ShootBullet : MonoBehaviour {
 
 		switch (this.gameObject.tag) {
 		case "PlayerBullet":
-			rb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletImpulse;
+			//rb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletImpulse;
+			//rb.rotation = this.transform.rotation;
 			//rb.AddForce (0.0f, 0.0f, bulletImpulse, ForceMode.Impulse);
 			break;
 		case "DemonBullet":

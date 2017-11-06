@@ -98,10 +98,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void resetCounterOf(string objectsTag) {
-		if (objectsTag == "Asteroid")
-			asteroidCount = 0;
-		if (objectsTag == "Demon")
-			demonCount = 0;
+		asteroidCount = 0;
+		demonCount = 0;
 	}
 
 	bool shouldCreateNewAsteroid() {

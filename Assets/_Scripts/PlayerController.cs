@@ -13,12 +13,13 @@ public class PlayerController : MonoBehaviour {
 	public float backThrust; // when player shoots a bullet
 	public float backThrustTime;
 	public float speed;
-	public Vector3 playerBoundaryMin; // player boundary
-	public Vector3 playerBoundaryMax; // player boundary
+	public Vector3 boundaryMin; // player boundary
+	public Vector3 boundaryMax; // player boundary
 	private Rigidbody rb;
 	//private bool movingRight = false;
 	public GameObject playerExplosion;
 	public BulletType bulletType = BulletType.Regular;
+	public float bulletImpulse;
 
 
 	// BULLET:
@@ -63,9 +64,9 @@ public class PlayerController : MonoBehaviour {
 		rb.velocity = new Vector3 (moveHorizontal * speed, moveVertical * speed, rb.velocity.z);
 
 		rb.position = new Vector3(
-			Mathf.Clamp(rb.position.x, playerBoundaryMin.x, playerBoundaryMax.x),
-			Mathf.Clamp(rb.position.y, playerBoundaryMin.y, playerBoundaryMax.y),
-			Mathf.Clamp(rb.position.z, playerBoundaryMin.z, playerBoundaryMax.z)
+			Mathf.Clamp(rb.position.x, boundaryMin.x, boundaryMax.x),
+			Mathf.Clamp(rb.position.y, boundaryMin.y, boundaryMax.y),
+			Mathf.Clamp(rb.position.z, boundaryMin.z, boundaryMax.z)
 		);
 
 		rb.rotation = Quaternion.Euler (0.0f, 0.0f, rb.velocity.x * -tilt);
@@ -102,14 +103,22 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void shootRegularBullet() {
-		Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
+		//Instantiate(bullet, transform.position, transform.rotation);
 		//GetComponent<AudioSource>().Play (); // sound effect
 		//StartCoroutine(thrustPlayerBack());
+		GameObject bulletInstance = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
+		Rigidbody bulletInstanceRb = bulletInstance.GetComponent<Rigidbody> ();
+		bulletInstanceRb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletImpulse;
+		//bulletInstanceRb.angularVelocity = transform.rotation * transform.forward * bulletImpulse;
 	}
 
 	void shootTwoRegularBullets() {
+		float angle = -0.2f;
 		foreach (Transform trans in bulletSpawnTwoBullets) {
-			Instantiate(bullet, trans.position, trans.rotation);
+			angle = -angle;
+			GameObject bulletInstance = Instantiate(bullet, trans.position, trans.rotation) as GameObject;
+			Rigidbody bulletInstanceRb = bulletInstance.GetComponent<Rigidbody> ();
+			bulletInstanceRb.velocity = new Vector3 (angle, 0.0f, 1.0f) * bulletImpulse;
 		}
 	}
 

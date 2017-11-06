@@ -5,6 +5,8 @@ using System.Collections;
 public class Demon : MonoBehaviour {
 
 	private Transform playerPos;
+	private PlayerController playerScript;
+	private Vector3 targetPos;
 	//public Transform spawnPos;
 
 	public GameObject demonExplosion;
@@ -12,6 +14,7 @@ public class Demon : MonoBehaviour {
 	public float demonSpeed;
 	public float fireRate;
 	public float startBulletShootWait;
+	public int minDistanceFromPlayer;
 	//private float nextFire;
 	//public float fireRate;
 
@@ -19,7 +22,11 @@ public class Demon : MonoBehaviour {
 	private GameController gameController;
 
 	void Start() {
-		playerPos = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform> ();
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		playerScript = player.GetComponent<PlayerController> ();
+		playerPos = player.GetComponent<Transform> ();
+		setTargetPosition ();
+
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		//animator = GetComponent<Animator> ();
 
@@ -30,13 +37,21 @@ public class Demon : MonoBehaviour {
 
 	void Update () {
 		this.gameObject.transform.LookAt (playerPos);
-		transform.position = Vector3.Lerp(transform.position, playerPos.position, Time.deltaTime * demonSpeed);
+		transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * demonSpeed);
 	}
 
 	void OnCollisionEnter(Collision collision) {
 		GameObject collider = collision.collider.gameObject;
 		if (collider.tag == "PlayerBullet")
 			bulletHitDemon(collider);
+	}
+
+	void setTargetPosition() {
+		targetPos = new Vector3(
+			Random.Range(playerScript.boundaryMin.x, playerScript.boundaryMax.x),
+			Random.Range(playerScript.boundaryMin.y, playerScript.boundaryMax.y),
+			Random.Range(minDistanceFromPlayer, minDistanceFromPlayer * 1.5f)
+		);
 	}
 
 	void bulletHitDemon(GameObject bulletInstance) {
