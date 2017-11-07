@@ -75,6 +75,7 @@ public class Score : MonoBehaviour {
 	void levelUpgraded() {
 		// TO DO: show something on screen (as congratulations)
 		gameController.player.increaseBulletType ();
+		StartCoroutine (gameController.SpawnShieldPickUps ());
 	}
 
 	void OnUpdate() {

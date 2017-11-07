@@ -21,6 +21,11 @@ public class GameController : MonoBehaviour {
 	public GameObject demon;
 	private int demonCount = 0;
 	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
+	private int[] numberOfShieldPickUps = {0, 1, 2, 3, 4, 5};
+
+	//PickUps
+	public GameObject shieldPickUp;
+	private int shieldPickUpCount = 0;
 
 	//Player:
 	public PlayerController player;
@@ -53,7 +58,6 @@ public class GameController : MonoBehaviour {
 	// Asteroids:
 
 	IEnumerator SpawnAsteroids () {
-		Debug.Log (scoringSystem.gameState == GameState.Playing);
 		//yield return new WaitForSeconds (startWait);
 		while (scoringSystem.gameState == GameState.Playing) {
 			for (int i = 0; i < asteroidSpawnCount; i++) {
@@ -81,29 +85,31 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void increaseCounterOf(string objectsTag) {
-		Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
-
 		if (objectsTag == "Asteroid")
 			asteroidCount++;
-		if (objectsTag == "Demon")
+		else if (objectsTag == "Demon")
 			demonCount++;
+		else if (objectsTag == "ShieldPickUp")
+			shieldPickUpCount++;
 	}
 
 	public void reduceCounterOf(string objectsTag) {
-		Debug.Log ("Asteroids count: " + asteroidCount + ",  demons count: " + demonCount);
 		if (objectsTag == "Asteroid") {
 			if (asteroidCount > 0) 
 				asteroidCount--;
-		}
-		if (objectsTag == "Demon") {
+		} else if (objectsTag == "Demon") {
 			if (demonCount > 0) 
 				demonCount--;
+		} else if (objectsTag == "ShieldPickUp") {
+			if (shieldPickUpCount > 0) 
+				shieldPickUpCount--;
 		}
 	}
 
 	public void resetCounters() {
 		asteroidCount = 0;
 		demonCount = 0;
+		shieldPickUpCount = 0;
 	}
 
 	bool shouldCreateNewAsteroid() {
@@ -133,5 +139,32 @@ public class GameController : MonoBehaviour {
 	int getMaxDemonsOnScreen() {
 		return maxDemonsOnScreen [scoringSystem.getLevel () - 1];
 	}
+		
+	// Pick Ups:
+	int getMaxShieldPickUps() {
+		return 	numberOfShieldPickUps [scoringSystem.getLevel () - 1];	
+	}
 
+	public IEnumerator SpawnShieldPickUps () {
+		if (!(shieldPickUpCount < getMaxShieldPickUps ()))
+			yield break;
+		
+		yield return new WaitForSeconds (2.0f * scoringSystem.getLevel());
+		for (int i = 0; i < getMaxShieldPickUps(); i++) {
+			instantiateShieldPickUp ();
+			yield return new WaitForSeconds (spawnWait * scoringSystem.getLevel());
+		}
+	}
+
+	public void instantiateShieldPickUp() {
+		Debug.Log ("pickup instantiated");
+		Vector3 spawnPosition = new Vector3 (
+			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
+			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
+			Random.Range (asteroidSpawnMin.z, asteroidSpawnMax.z)
+		);
+		Quaternion spawnRotation = Quaternion.identity;
+		Instantiate (shieldPickUp, spawnPosition, spawnRotation);
+		increaseCounterOf ("ShieldPickUp");
+	}
 }

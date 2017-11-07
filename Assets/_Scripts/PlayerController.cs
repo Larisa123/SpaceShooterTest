@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour {
 	public float bulletImpulse;
 
 
+	public GameObject shield;
+	public float shieldDuration;
+
+
 	// BULLET:
 	public GameObject bullet;
 	public Transform bulletSpawn;
@@ -51,6 +55,8 @@ public class PlayerController : MonoBehaviour {
 		if (collision.collider.tag == "DemonBullet") {
 			demonHitPlayer (collision.collider.gameObject);
 
+		} else if (collision.collider.tag == "PlayerShieldPickUp") {
+			shieldPickedUp (collision.collider.gameObject);
 
 		} 
 	}
@@ -146,8 +152,16 @@ public class PlayerController : MonoBehaviour {
 	}
 		
 	void explode () {
-		Instantiate (playerExplosion, this.transform.position, this.transform.rotation);
+		GameObject explosionInstance = Instantiate (playerExplosion, this.transform.position, this.transform.rotation) as GameObject;
 		Destroy (this.gameObject);
+		Destroy (explosionInstance, 1.0f);
+	}
+	// Pick Ups:
+
+	void shieldPickedUp(GameObject shield) {
+		Destroy (shield);
+		GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
+		Destroy (shieldInstance, shieldDuration);
 	}
 
 
