@@ -88,6 +88,12 @@ public class PlayerController : MonoBehaviour {
 		rb.position = new Vector3 (transform.position.x, transform.position.y, 0.0f);
 	}
 
+	void explode () {
+		GameObject explosionInstance = Instantiate (playerExplosion, this.transform.position, this.transform.rotation) as GameObject;
+		Destroy (this.gameObject);
+		Destroy (explosionInstance, 0.3f);
+	}
+
 	// Bullets:
 
 	void shootBullets() {
@@ -152,11 +158,6 @@ public class PlayerController : MonoBehaviour {
 		} 
 	}
 		
-	void explode () {
-		GameObject explosionInstance = Instantiate (playerExplosion, this.transform.position, this.transform.rotation) as GameObject;
-		Destroy (this.gameObject);
-		Destroy (explosionInstance, 1.0f);
-	}
 	// Pick Ups:
 
 	void shieldPickedUp(GameObject shieldPickUp) {
@@ -164,7 +165,6 @@ public class PlayerController : MonoBehaviour {
 		//GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
 		//Instantiate (shield, this.transform.position, this.transform.rotation);
 		shield.SetActive (true);
-		Debug.Log ("Shield should be seen");
 		StartCoroutine (endShield());
 	}
 

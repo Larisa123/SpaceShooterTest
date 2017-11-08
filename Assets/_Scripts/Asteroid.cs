@@ -45,7 +45,9 @@ public class Asteroid : MonoBehaviour {
 
 	void explode () {
 		GameObject explosionInstance = Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation) as GameObject;
-		Destroy (explosionInstance, 1.0f);
+		//GameObject explosionEmpty = GameObject.FindGameObjectWithTag ("ExplosionEmpty");
+		//explosionInstance.transform.SetParent (explosionEmpty);
+		Destroy (explosionInstance, 0.3f);
 	}
 
 	void OnCollisionEnter(Collision collision) {

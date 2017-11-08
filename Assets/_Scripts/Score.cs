@@ -16,11 +16,13 @@ public class Score : MonoBehaviour {
 	private float playersHealth; // from 0 to 1
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
 
-	public Transform[] UIImagePositions;
-	public GameObject[] digitSprites1;
-	public GameObject[] digitSprites2;
-	public GameObject[] digitSprites3;
-	private GameObject[,] digitSprites;
+	//public Transform[] UIImagePositions;
+	//public GameObject[] digitSprites1;
+	//public GameObject[] digitSprites2;
+	//public GameObject[] digitSprites3;
+	//private GameObject[,] digitSprites;
+
+	[SerializeField] private Text scoreText;
 
 	[SerializeField] private GameController gameController;
 	public GameState gameState;
@@ -28,7 +30,6 @@ public class Score : MonoBehaviour {
 
 	void Start() {
 		//gameController = GetComponent<GameController> ();
-		createDigitSpritesTable();
 		resetScoringSystem (); // initializes the score and level
 	}
 
@@ -38,6 +39,7 @@ public class Score : MonoBehaviour {
 		resetPlayersHealth ();
 		resetGameState ();
 		gameController.player.resetBulletType ();
+		StartCoroutine (gameController.SpawnAsteroids ());
 	}
 
 	public int getScore () { return score; }
@@ -107,28 +109,6 @@ public class Score : MonoBehaviour {
 			return true;
 		} else return false;
 	}
-
-	private void createDigitSpritesTable() {
-		digitSprites = new GameObject[3, 10];
-		for (int j=0; j < 10; j++) {
-			digitSprites [0, j] = digitSprites1[j];
-			digitSprites[1, j] = digitSprites2[j];
-			digitSprites[2, j] = digitSprites3[j];
-		}
-	}
-
-
-	// UI:
-	/*
-	private void createUIImages() {
-		UIImages = new Image[10]; // 9 digits + 0
-
-		for (int i = 0; i < 10; i++) {
-			//UIImages [i] = Image (i.ToString);
-		}
-	}
-	*/
-		
 	private string getUIString() {
 		int scr = getScore ();
 
@@ -142,27 +122,6 @@ public class Score : MonoBehaviour {
 	}
 
 	private void updateUI() {
-		if (getScore () < 0) {
-			gameController.gameOver ();
-		} else {
-			string UIScore = getUIString ();
-			char[] digitCharArray;
-			int digit;
-			GameObject sprite;
-
-			for (int i = 0; i < 3; i++) {
-				digitCharArray = UIScore.ToCharArray();
-				digit = int.Parse (digitCharArray[i].ToString());
-				// deactivate all others digits and activate current digit
-				for (int j = 0; j < 10; j++) {
-					sprite = digitSprites [i, digit];
-					//Debug.Log ("indeks: "+i+" "+digit + " " + sprite.name);
-					if (j == digit)
-						sprite.SetActive (true);
-					else
-						sprite.SetActive (false);
-				}
-			}
-		}
+		scoreText.text = getUIString ();
 	}
 }

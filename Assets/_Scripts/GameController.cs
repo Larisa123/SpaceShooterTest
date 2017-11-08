@@ -20,8 +20,8 @@ public class GameController : MonoBehaviour {
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private static int demonCount = 0;
-	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
-	private int[] numberOfShieldPickUps = {0, 2, 4, 6, 9, 12};
+	private int[] maxDemonsOnScreen = {3, 4, 7, 10, 15, 20}; // depends on the level
+	private int[] numberOfShieldPickUps = {1, 2, 4, 6, 9, 12};
 
 	//PickUps
 	public GameObject shieldPickUp;
@@ -35,7 +35,6 @@ public class GameController : MonoBehaviour {
 
 	void Start () {
 		resetCounters ();
-		StartCoroutine (SpawnAsteroids ());
 	}
 
 	/*                        RESTART:
@@ -57,7 +56,7 @@ public class GameController : MonoBehaviour {
 
 	// Asteroids:
 
-	IEnumerator SpawnAsteroids () {
+	public IEnumerator SpawnAsteroids () {
 		//yield return new WaitForSeconds (startWait);
 		while (scoringSystem.gameState == GameState.Playing) {
 			for (int i = 0; i < asteroidSpawnCount; i++) {
