@@ -13,7 +13,11 @@ public enum GameState {
 public class Score : MonoBehaviour {
 	private int score;
 	private int level;
+
 	private float playersHealth; // from 0 to 1
+	[SerializeField] private GameObject healthBarObject;
+	[SerializeField] private Image healthBar;
+
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
 
 	//public Transform[] UIImagePositions;
@@ -22,6 +26,7 @@ public class Score : MonoBehaviour {
 	//public GameObject[] digitSprites3;
 	//private GameObject[,] digitSprites;
 
+	[SerializeField] private GameObject scoreTextObject;
 	[SerializeField] private Text scoreText;
 
 	[SerializeField] private GameController gameController;
@@ -45,7 +50,10 @@ public class Score : MonoBehaviour {
 	public int getScore () { return score; }
 	public void increaseScore() { this.score++; updateUI (); checkForUpgrades ();}
 	public void reduceScore() { this.score--; updateUI (); checkForUpgrades ();}
-	void resetScore() { this.score = 0; updateUI ();}
+	void resetScore() { 
+		this.score = 0; 
+		scoreTextObject.SetActive (true);
+		updateUI ();}
 
 	public int getLevel() { return level; }
 	void resetLevel() { this.level = 1;}
@@ -87,19 +95,36 @@ public class Score : MonoBehaviour {
 	// Player:
 
 	public void reducePlayersHealth() {
-		if (playersHealth > 0.2f)
+		if (playersHealth > 0.2f) {
 			playersHealth -= 0.2f;
-		Debug.Log ("Players health decreased");
+			updateHealthBar ();
+		} else if (playersHealth == 0.2f)
+			gameController.gameOver ();
 	}
 
 	public void increasePlayersHealth() {
-		if (playersHealth < 0.8f)
+		if (playersHealth < 0.8f) {
 			playersHealth += 0.2f;
-		Debug.Log ("Players health decreased");
+			updateHealthBar ();
+		}
 	}
 
 	public void resetPlayersHealth() {
 		playersHealth = 1.0f;
+		healthBarObject.SetActive (true);
+		healthBar.color = Color.green;
+		updateHealthBar ();
+	}
+
+	public void updateHealthBar() {
+		if (playersHealth < 0.3f)
+			healthBar.color = Color.red;
+		else if (playersHealth > 0.3f && playersHealth < 0.7f)
+			healthBar.color = Color.yellow;
+		else if (playersHealth > 0.7f)
+			healthBar.color = Color.green;
+		
+		healthBar.fillAmount = playersHealth;
 	}
 
 	// Game:

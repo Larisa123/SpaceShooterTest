@@ -33,8 +33,15 @@ public class GameController : MonoBehaviour {
 	// Score:
 	public Score scoringSystem;
 
+	[SerializeField] private GameObject secondCameraScreen;
+
 	void Start () {
+		showSecondCameraScreen ();
 		resetCounters ();
+	}
+
+	void showSecondCameraScreen () {
+		secondCameraScreen.SetActive (true);
 	}
 
 	/*                        RESTART:
@@ -159,9 +166,9 @@ public class GameController : MonoBehaviour {
 
 	public void instantiateShieldPickUp() {
 		Vector3 spawnPosition = new Vector3 (
-			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
-			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
-			Random.Range (10.0f, 15.0f)
+			Random.Range (asteroidSpawnMin.x + 1.0f, asteroidSpawnMax.x - 1.0f), 
+			Random.Range (asteroidSpawnMin.y + 1.0f, asteroidSpawnMax.y - 1.0f), 
+			Random.Range (7.0f, 12.0f)
 		);
 
 		Quaternion spawnRotation = Quaternion.identity;
