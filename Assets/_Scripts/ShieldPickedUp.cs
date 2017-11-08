@@ -6,9 +6,11 @@ public class ShieldPickedUp : MonoBehaviour {
 	public float speed;
 	public float removeZ;
 	private GameController gameController;
+	private AudioSource shieldPickUpSound;
 
 	void Start() {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		shieldPickUpSound = GetComponent<AudioSource> ();
 		giveVelocity ();
 	}
 
@@ -31,4 +33,11 @@ public class ShieldPickedUp : MonoBehaviour {
 		gameController.reduceCounterOf ("ShieldPickUp");
 	}
 		
+
+	void OnCollisionEnter(Collision collision) {
+		if (collision.collider.gameObject.CompareTag ("Player")) {
+			Debug.Log ("Player picked up shield from shield");
+			shieldPickUpSound.Play ();
+		}
+	}
 }

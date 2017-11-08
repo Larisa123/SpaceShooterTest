@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 //public struct BulletType {
 //}
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour {
 
 	private GameObject shield;
 	public float shieldDuration;
-
+	//private AudioSource shieldPickUpSound;
 
 	// BULLET:
 	public GameObject bullet;
@@ -38,7 +39,8 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Start() {
-		shield = this.gameObject.transform.GetChild(1).gameObject;
+		//shieldPickUpSound = GetComponent<AudioSource> ();
+		shield = this.gameObject.transform.FindChild("Player Shield").gameObject;
 		//gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody> ();
 
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour {
 			demonHitPlayer (collision.collider.gameObject);
 
 		} else if (collision.collider.tag == "PlayerShieldPickUp") {
+			Debug.Log ("Player picked up shield from player");
 			shieldPickedUp (collision.collider.gameObject);
 
 		} 
