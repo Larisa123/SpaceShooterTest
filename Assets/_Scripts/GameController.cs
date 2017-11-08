@@ -94,7 +94,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void reduceCounterOf(string objectsTag) {
-		Debug.Log (string.Format ("asteroids: {0}, demons: {1}, pickups: {2}", asteroidCount, demonCount, shieldPickUpCount));
+		//Debug.Log (string.Format ("asteroids: {0}, demons: {1}, pickups: {2}", asteroidCount, demonCount, shieldPickUpCount));
 		if (objectsTag == "Asteroid") {
 			if (asteroidCount > 0) 
 				asteroidCount--;
@@ -159,7 +159,6 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void instantiateShieldPickUp() {
-		Debug.Log ("pickup instantiated");
 		Vector3 spawnPosition = new Vector3 (
 			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
 			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 

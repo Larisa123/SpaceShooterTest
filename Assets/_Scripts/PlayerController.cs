@@ -162,8 +162,9 @@ public class PlayerController : MonoBehaviour {
 	void shieldPickedUp(GameObject shieldPickUp) {
 		Destroy (shieldPickUp);
 		//GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
-		Instantiate (shield, this.transform.position, this.transform.rotation);
+		//Instantiate (shield, this.transform.position, this.transform.rotation);
 		shield.SetActive (true);
+		Debug.Log ("Shield should be seen");
 		StartCoroutine (endShield());
 	}
 
