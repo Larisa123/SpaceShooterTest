@@ -60,9 +60,10 @@ public class Demon : MonoBehaviour {
 	}
 
 	void bulletHitDemon(GameObject bulletInstance) {
-		gameController.reduceCounterOf ("Demon");
+		//gameController.reduceCounterOf ("Demon");
 		gameController.scoringSystem.increaseScore ();
-		explode (bulletInstance);
+		Destroy (bulletInstance);
+		Destroy (this.gameObject);
 	}
 
 	void giveDemonVelocity() {
@@ -89,9 +90,13 @@ public class Demon : MonoBehaviour {
 		bulletInstanceRb.velocity = (playerPos.position - transform.position).normalized * bulletImpulse;
 	}
 
-	void explode(GameObject bulletInstance) {
-		Instantiate (demonExplosion, this.transform.position, this.transform.rotation);
-		Destroy (bulletInstance);
-		Destroy (this.gameObject);
+	void explode() {
+		GameObject explosionInstance = Instantiate (demonExplosion, this.transform.position, this.transform.rotation) as GameObject;
+		Destroy (explosionInstance, 1.0f);
+	}
+
+	void OnDestroy() {
+		gameController.reduceCounterOf ("Demon");
+		explode ();
 	}
 }

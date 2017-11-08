@@ -44,9 +44,8 @@ public class Asteroid : MonoBehaviour {
 	}
 
 	void explode () {
-		Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation);
-		//Destroy (asteroidExplosion, 1.0f);
-		Destroy (this.gameObject);
+		GameObject explosionInstance = Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation) as GameObject;
+		Destroy (explosionInstance, 1.0f);
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -61,14 +60,21 @@ public class Asteroid : MonoBehaviour {
 
 	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
 		gameController.scoringSystem.increaseScore (); 
-		gameController.reduceCounterOf ("Asteroid");
+		//gameController.reduceCounterOf ("Asteroid");
 		Destroy (bullet);
-		explode ();
+		Destroy (this.gameObject);
+		//explode (); // explode is called from ondestroy
 	}
 
 	void asteroidHitPlayer(GameObject player) {// player's bullet hit an asteroid
 		gameController.gameOver();
+		Destroy (this.gameObject);
 		//Destroy (player);
+		//explode ();
+	}
+
+	void OnDestroy() {
+		gameController.reduceCounterOf ("Asteroid");
 		explode ();
 	}
 }

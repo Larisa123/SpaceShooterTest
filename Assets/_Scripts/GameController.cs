@@ -12,20 +12,20 @@ public class GameController : MonoBehaviour {
 
 	public Vector3 asteroidSpawnMax;
 	public Vector3 asteroidSpawnMin;
-	private int asteroidCount = 0;
+	private static int asteroidCount = 0;
 	public int asteroidSpawnCount;
 	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
 
 	// ENEMIES - DEMONS:
 	public GameObject demon;
-	private int demonCount = 0;
+	private static int demonCount = 0;
 	private int[] maxDemonsOnScreen = {0, 4, 7, 10, 15, 20}; // depends on the level
-	private int[] numberOfShieldPickUps = {0, 1, 2, 3, 4, 5};
+	private int[] numberOfShieldPickUps = {0, 2, 4, 6, 9, 12};
 
 	//PickUps
 	public GameObject shieldPickUp;
-	private int shieldPickUpCount = 0;
+	private static int shieldPickUpCount = 0;
 
 	//Player:
 	public PlayerController player;
@@ -94,6 +94,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void reduceCounterOf(string objectsTag) {
+		Debug.Log (string.Format ("asteroids: {0}, demons: {1}, pickups: {2}", asteroidCount, demonCount, shieldPickUpCount));
 		if (objectsTag == "Asteroid") {
 			if (asteroidCount > 0) 
 				asteroidCount--;
@@ -133,7 +134,8 @@ public class GameController : MonoBehaviour {
 
 	public void demonEnteredPlayersShiels(GameObject demon) {
 		Rigidbody demonRb = demon.GetComponent<Rigidbody> ();
-		demonRb.velocity = Vector3.zero; // TO DO: don't just stop it!
+		Destroy (demon);
+		//demonRb.velocity = Vector3.zero; // TO DO: don't just stop it!
 	}
 
 	int getMaxDemonsOnScreen() {
@@ -152,7 +154,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (2.0f * scoringSystem.getLevel());
 		for (int i = 0; i < getMaxShieldPickUps(); i++) {
 			instantiateShieldPickUp ();
-			yield return new WaitForSeconds (spawnWait * scoringSystem.getLevel());
+			yield return new WaitForSeconds (spawnWait * 5.0f * scoringSystem.getLevel());
 		}
 	}
 
@@ -161,8 +163,9 @@ public class GameController : MonoBehaviour {
 		Vector3 spawnPosition = new Vector3 (
 			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
 			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
-			Random.Range (asteroidSpawnMin.z, asteroidSpawnMax.z)
+			Random.Range (10.0f, 15.0f)
 		);
+
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (shieldPickUp, spawnPosition, spawnRotation);
 		increaseCounterOf ("ShieldPickUp");

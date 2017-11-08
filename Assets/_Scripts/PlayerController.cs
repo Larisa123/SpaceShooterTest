@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 	public float bulletImpulse;
 
 
-	public GameObject shield;
+	private GameObject shield;
 	public float shieldDuration;
 
 
@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Start() {
+		shield = this.gameObject.transform.GetChild(1).gameObject;
 		//gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody> ();
 
@@ -158,10 +159,17 @@ public class PlayerController : MonoBehaviour {
 	}
 	// Pick Ups:
 
-	void shieldPickedUp(GameObject shield) {
-		Destroy (shield);
-		GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
-		Destroy (shieldInstance, shieldDuration);
+	void shieldPickedUp(GameObject shieldPickUp) {
+		Destroy (shieldPickUp);
+		//GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
+		Instantiate (shield, this.transform.position, this.transform.rotation);
+		shield.SetActive (true);
+		StartCoroutine (endShield());
+	}
+
+	IEnumerator endShield() {
+		yield return new WaitForSeconds (shieldDuration);
+		shield.SetActive (false);
 	}
 
 
