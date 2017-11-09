@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
 
 	private GameObject shield;
 	public float shieldDuration;
+	public bool hasShieldOn = false;
 	//private AudioSource shieldPickUpSound;
 
 	// BULLET:
@@ -164,9 +165,14 @@ public class PlayerController : MonoBehaviour {
 	// Pick Ups:
 
 	void shieldPickedUp(GameObject shieldPickUp) {
+		if (hasShieldOn) {
+			gameController.scoringSystem.increaseScore ();
+			return;
+		}
 		Destroy (shieldPickUp);
 		//GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
 		//Instantiate (shield, this.transform.position, this.transform.rotation);
+		hasShieldOn = true;
 		shield.SetActive (true);
 		StartCoroutine (endShield());
 	}
@@ -174,6 +180,7 @@ public class PlayerController : MonoBehaviour {
 	IEnumerator endShield() {
 		yield return new WaitForSeconds (shieldDuration);
 		shield.SetActive (false);
+		hasShieldOn = false;
 	}
 
 

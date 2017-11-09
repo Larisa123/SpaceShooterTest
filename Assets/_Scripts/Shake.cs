@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// THIS SCRIPT IS NOT MINE!
+// I USED THE CODE FROM THIS TUTORIAL: http://unitytipsandtricks.blogspot.si/2013/05/camera-shake.html
+
 public class Shake : MonoBehaviour {
 	public float duration;
 	public float magnitude;

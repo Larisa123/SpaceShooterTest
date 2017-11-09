@@ -37,6 +37,7 @@ public class ShieldPickedUp : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		if (collision.collider.gameObject.CompareTag ("Player")) {
 			Debug.Log ("Player picked up shield from shield");
+			//shieldPickUpSound.mute = false;
 			shieldPickUpSound.Play ();
 		}
 	}

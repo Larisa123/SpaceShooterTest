@@ -151,9 +151,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void demonEnteredPlayersShiels(GameObject demon) {
-		Rigidbody demonRb = demon.GetComponent<Rigidbody> ();
+		//reduceCounterOf ("Demon");
 		Destroy (demon);
-		//demonRb.velocity = Vector3.zero; // TO DO: don't just stop it!
 	}
 
 	int getMaxDemonsOnScreen() {
@@ -169,10 +168,10 @@ public class GameController : MonoBehaviour {
 		if (!(shieldPickUpCount < getMaxShieldPickUps ()))
 			yield break;
 		
-		yield return new WaitForSeconds (3.0f * scoringSystem.getLevel());
+		yield return new WaitForSeconds (5.0f * scoringSystem.getLevel());
 		for (int i = 0; i < getMaxShieldPickUps(); i++) {
 			instantiateShieldPickUp ();
-			yield return new WaitForSeconds (spawnWait * 20.0f * scoringSystem.getLevel());
+			yield return new WaitForSeconds (spawnWait * 100.0f * scoringSystem.getLevel());
 		}
 	}
 

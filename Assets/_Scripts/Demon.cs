@@ -63,10 +63,12 @@ public class Demon : MonoBehaviour {
 		//Vector3 maxAdjustment = new Vector3(2.0f, 2.0f, minDistanceFromPlayer + 2.0f);
 
 		Vector3 min = player.boundaryMin + new Vector3(2.0f, 2.0f, minDistanceFromPlayer);
-		Vector3 max = player.boundaryMax + new Vector3(2.0f, 2.0f, minDistanceFromPlayer + 2.0f);
+		Vector3 max = player.boundaryMax + new Vector3(-2.0f, -2.0f, minDistanceFromPlayer + 2.0f);
+		//TODO: they dont stop here! change something so they wont be able to come too close to the ship
 
 		Vector3 targetPosition = gameController.randomPositionInBoundary (min, max);
 		rb.velocity = (targetPosition - transform.position).normalized * demonSpeed; 
+		Debug.Log (rb.velocity);
 	}
 
 
