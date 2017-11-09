@@ -25,6 +25,7 @@ public class Asteroid : MonoBehaviour {
 	}
 
 	void giveAsteroidVelocity() {
+		//GameObject asteroidChil = transform.FindChild ("Asteroid Collision Avoidance Collider").gameObject;
 		rb = GetComponent<Rigidbody> ();
 		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
 		rb.velocity = (player.transform.position - transform.position).normalized * speed; 
@@ -50,12 +51,15 @@ public class Asteroid : MonoBehaviour {
 		Destroy (explosionInstance, 1.0f);
 	}
 
-	void OnCollisionEnter(Collision collision) {
-		if (collision.collider.tag == "PlayerBullet") {
-			playerHitAsteroid (collision.collider.gameObject);
+	void OnTriggerEnter(Collider collider) {
+		if (collider.tag == "PlayerBullet") {
+			playerHitAsteroid (collider.gameObject);
 
-		} else if (collision.collider.tag == "Player") {
-			asteroidHitPlayer(collision.collider.gameObject);
+		} else if (collider.tag == "Player") {
+			asteroidHitPlayer(collider.gameObject);
+
+		} else if (collider.tag == "PlayerShield") {
+			asteroidHitShield ();
 
 		}
 	}
@@ -64,6 +68,12 @@ public class Asteroid : MonoBehaviour {
 		gameController.scoringSystem.increaseScore (); 
 		//gameController.reduceCounterOf ("Asteroid");
 		Destroy (bullet);
+		Destroy (this.gameObject);
+		//explode (); // explode is called from ondestroy
+	}
+
+	void asteroidHitShield() {
+		gameController.scoringSystem.increaseScore (); 
 		Destroy (this.gameObject);
 		//explode (); // explode is called from ondestroy
 	}

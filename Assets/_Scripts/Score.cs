@@ -49,7 +49,14 @@ public class Score : MonoBehaviour {
 
 	public int getScore () { return score; }
 	public void increaseScore() { this.score++; updateUI (); checkForUpgrades ();}
-	public void reduceScore() { this.score--; updateUI (); checkForUpgrades ();}
+	public void reduceScore() { 
+		if (getScore () <= 0) 
+			return;
+		this.score--; 
+		updateUI (); 
+		checkForUpgrades ();
+	}
+	
 	void resetScore() { 
 		this.score = 0; 
 		scoreTextObject.SetActive (true);

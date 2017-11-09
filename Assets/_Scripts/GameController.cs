@@ -5,6 +5,7 @@ enum TutorialState {Start, HowToMove, HowToShoot, Finished}
 
 public class GameController : MonoBehaviour {
 
+
 	// ASTEROIDS:
 	public float spawnWait;
 	public float startWait;
@@ -16,12 +17,14 @@ public class GameController : MonoBehaviour {
 	public int asteroidSpawnCount;
 	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
+	public Camera mainCamera;
+	private Shake shakeScript;
 
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private static int demonCount = 0;
 	private int[] maxDemonsOnScreen = {3, 4, 7, 10, 15, 20}; // depends on the level
-	private int[] numberOfShieldPickUps = {1, 2, 4, 6, 9, 12};
+	private int[] numberOfShieldPickUps = {1, 2, 3, 4, 5, 7};
 
 	//PickUps
 	public GameObject shieldPickUp;
@@ -36,8 +39,13 @@ public class GameController : MonoBehaviour {
 	[SerializeField] private GameObject secondCameraScreen;
 
 	void Start () {
+		shakeScript = mainCamera.GetComponent<Shake> ();
 		showSecondCameraScreen ();
 		resetCounters ();
+	}
+
+	public void shakeCamera() {
+		StartCoroutine(shakeScript.CameraShake ());
 	}
 
 	void showSecondCameraScreen () {
@@ -77,17 +85,21 @@ public class GameController : MonoBehaviour {
 	public void instantiateAsteroidAndDemon() {
 		if (!shouldCreateNewAsteroid ())
 			return;
-		Vector3 spawnPosition = new Vector3 (
-			Random.Range (asteroidSpawnMin.x, asteroidSpawnMax.x), 
-			Random.Range (asteroidSpawnMin.y, asteroidSpawnMax.y), 
-			Random.Range (asteroidSpawnMin.z, asteroidSpawnMax.z)
-		);
+		Vector3 spawnPosition = randomPositionInBoundary (asteroidSpawnMin, asteroidSpawnMax);
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (asteroid, spawnPosition, spawnRotation);
 		increaseCounterOf ("Asteroid");
 
 		if (shouldCreateNewDemon())
 			instantiateDemon (spawnPosition, spawnRotation);
+	}
+
+	public Vector3 randomPositionInBoundary(Vector3 min, Vector3 max) {
+		return new Vector3 (
+			Random.Range (min.x, max.x), 
+			Random.Range (min.y, max.y), 
+			Random.Range (min.z, max.z)
+		);
 	}
 
 	public void increaseCounterOf(string objectsTag) {
@@ -157,19 +169,20 @@ public class GameController : MonoBehaviour {
 		if (!(shieldPickUpCount < getMaxShieldPickUps ()))
 			yield break;
 		
-		yield return new WaitForSeconds (2.0f * scoringSystem.getLevel());
+		yield return new WaitForSeconds (3.0f * scoringSystem.getLevel());
 		for (int i = 0; i < getMaxShieldPickUps(); i++) {
 			instantiateShieldPickUp ();
-			yield return new WaitForSeconds (spawnWait * 5.0f * scoringSystem.getLevel());
+			yield return new WaitForSeconds (spawnWait * 20.0f * scoringSystem.getLevel());
 		}
 	}
 
 	public void instantiateShieldPickUp() {
 		Vector3 spawnPosition = new Vector3 (
-			Random.Range (asteroidSpawnMin.x + 1.0f, asteroidSpawnMax.x - 1.0f), 
-			Random.Range (asteroidSpawnMin.y + 1.0f, asteroidSpawnMax.y - 1.0f), 
-			Random.Range (7.0f, 12.0f)
+			Random.Range (-5.0f, 5.0f), 
+			Random.Range (-3.0f, 3.0f), 
+			Random.Range (5.0f, 10.0f)
 		);
+
 
 		Quaternion spawnRotation = Quaternion.identity;
 		Instantiate (shieldPickUp, spawnPosition, spawnRotation);

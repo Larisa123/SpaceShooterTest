@@ -180,6 +180,7 @@ public class PlayerController : MonoBehaviour {
 	// Demon Bullets:
 
 	void demonHitPlayer(GameObject demonBullet) {
+		gameController.shakeCamera ();
 		Destroy (demonBullet);
 		gameController.scoringSystem.reducePlayersHealth ();
 	}
