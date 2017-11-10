@@ -40,32 +40,23 @@ public class Demon : MonoBehaviour {
 		GameObject collider = collision.collider.gameObject;
 		if (collider.tag == "PlayerBullet") {
 			bulletHitDemon(collider); 
+		} else if (collider.tag == "PlayerShield") {
+			bulletHitDemon(collider); 
 		}
 	}
-
-	/*
-	void setTargetPosition() {
-		targetPos = new Vector3(
-			Random.Range(playerScript.boundaryMin.x, playerScript.boundaryMax.x),
-			Random.Range(playerScript.boundaryMin.y, playerScript.boundaryMax.y),
-			Random.Range(minDistanceFromPlayer, minDistanceFromPlayer * 1.5f)
-		);
-	}
-	*/
 
 	void bulletHitDemon(GameObject bulletInstance) {
 		//gameController.reduceCounterOf ("Demon");
 		gameController.scoringSystem.reduceScore ();
 		Destroy (bulletInstance);
-		Destroy (this.gameObject, 0.2f);
+		explode ();
+	}
+
+	void demonEnteredPlayersShiels( ) {
 		explode ();
 	}
 
 	void giveDemonVelocity() {
-		// target position somewhere towards the player bpundary but with a bigger z:
-		//Vector3 minAdjustment = new Vector3(2.0f, 2.0f, minDistanceFromPlayer);
-		//Vector3 maxAdjustment = new Vector3(2.0f, 2.0f, minDistanceFromPlayer + 2.0f);
-
 		PlayerController player = gameController.player;
 
 		Vector3 min = player.boundaryMin + new Vector3(2.0f, 2.0f, minDistanceFromPlayer);
@@ -74,13 +65,9 @@ public class Demon : MonoBehaviour {
 
 		Vector3 targetPosition = gameController.randomPositionInBoundary (min, max);
 		rb.velocity = (targetPosition - transform.position).normalized * demonSpeed; 
-		Debug.Log (rb.velocity);
 	}
 
-	public void increaseShootingRate() {
-		fireRate /= 1.5f;
-	}
-
+	public void increaseShootingRate() { fireRate = (fireRate > 0.4f)? fireRate / 1.5f: 0.4f ;}
 
 	IEnumerator shootBulletsCoroutine () {
 		yield return new WaitForSeconds (startBulletShootWait);
@@ -99,12 +86,12 @@ public class Demon : MonoBehaviour {
 
 	void explode() {
 		GameObject explosionInstance = Instantiate (demonExplosion, this.transform.position, this.transform.rotation) as GameObject;
-		//SoundManager.Instance.PlayOneShot(SoundManager.Instance.explosion);
 		Destroy (explosionInstance, 1.5f);
+		Destroy (this.gameObject, 0.2f);
 	}
 
 	void OnDestroy() {
-		gameController.removeFromArray ("Demon", this.gameObject);
+		gameController.removeFromList ("Demon", this.gameObject);
 		gameController.makeDemonsAngrier ();// other demons should get angry
 	}
 }

@@ -11,32 +11,20 @@ public enum GameState {
 
 
 public class Score : MonoBehaviour {
-	private int score;
-	private int level;
+	private static int score;
+	[SerializeField] private GameObject scoreTextObject;
+	[SerializeField] private Text scoreText;
 
-	private float playersHealth; // from 0 to 1
+	private static float playersHealth; // from 0 to 1
 	[SerializeField] private GameObject healthBarObject;
 	[SerializeField] private Image healthBar;
 
+	private static int level;
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
-
-	//public Transform[] UIImagePositions;
-	//public GameObject[] digitSprites1;
-	//public GameObject[] digitSprites2;
-	//public GameObject[] digitSprites3;
-	//private GameObject[,] digitSprites;
-
-	[SerializeField] private GameObject scoreTextObject;
-	[SerializeField] private Text scoreText;
 
 	[SerializeField] private GameController gameController;
 	public GameState gameState;
 
-
-	void Start() {
-		//gameController = GetComponent<GameController> ();
-		//resetScoringSystem (); // initializes the score and level
-	}
 
 	public void resetScoringSystem() {
 		resetScore ();
@@ -44,26 +32,25 @@ public class Score : MonoBehaviour {
 		resetPlayersHealth ();
 		resetGameState ();
 		gameController.player.resetBulletType ();
-		StartCoroutine (gameController.SpawnAsteroids ());
 	}
 
 	public int getScore () { return score; }
-	public void increaseScore() { this.score++; updateUI (); checkForUpgrades ();}
+	public void increaseScore() { score++; updateUI (); checkForUpgrades ();}
 	public void reduceScore() { 
 		if (getScore () <= 0) 
 			return;
-		this.score--; 
+		score--; 
 		updateUI (); 
 		checkForUpgrades ();
 	}
 	
 	void resetScore() { 
-		this.score = 0; 
+		score = 0; 
 		scoreTextObject.SetActive (true);
 		updateUI ();}
 
 	public int getLevel() { return level; }
-	void resetLevel() { this.level = 1;}
+	void resetLevel() { level = 1;}
 
 	public void resetGameState() {
 		gameState = GameState.Playing;

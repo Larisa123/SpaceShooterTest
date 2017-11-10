@@ -26,17 +26,16 @@ public class ShieldPickedUp : MonoBehaviour {
 		if (transform.position.z < removeZ)
 			Destroy (this.gameObject);
 	}
-
-	void OnDestroy() {
-		gameController.reduceCounterOf ("ShieldPickUp");
-	}
 		
-
 	void OnCollisionEnter(Collision collision) {
 		if (collision.collider.gameObject.CompareTag ("Player")) {
 			Debug.Log ("Player picked up shield from shield");
-			//shieldPickUpSound.mute = false;
+			//TODO: make sound play   shieldPickUpSound.mute = false;
 			//SoundManager.Instance.PlayOneShot(SoundManager.Instance.shieldPickedUp);
 		}
+	}
+
+	void OnDestroy() {
+		gameController.removeFromList ("asteroid", this.gameObject);
 	}
 }

@@ -4,8 +4,6 @@ using System.Collections;
 public class Asteroid : MonoBehaviour {
 
 	public float rotationSize, speed, asteroidDisapearZ;
-	//public float scaleMultiplier;
-	//public float timeRequiredToScale;
 	private Rigidbody rb;
 	public GameObject asteroidExplosion;
 	private GameObject player; // ship
@@ -18,14 +16,10 @@ public class Asteroid : MonoBehaviour {
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		player = GameObject.FindGameObjectWithTag("Player") as GameObject;
 		giveAsteroidVelocity (); 
-
-		// TO DO: make the asteroid come in the player boundary, not directlly the center
-
-		//transform.localScale = Vector3.Lerp (transform.localScale * scaleMultiplier, transform.localScale, timeRequiredToScale);
+		transform.localScale *= Random.Range (0.7f, 1.0f); // just to make them look a bit more random
 	}
 
 	void giveAsteroidVelocity() {
-		//GameObject asteroidChil = transform.FindChild ("Asteroid Collision Avoidance Collider").gameObject;
 		rb = GetComponent<Rigidbody> ();
 		rb.angularVelocity = Random.insideUnitSphere * rotationSize;
 		rb.velocity = (player.transform.position - transform.position).normalized * speed; 
@@ -46,9 +40,8 @@ public class Asteroid : MonoBehaviour {
 
 	void explode () {
 		GameObject explosionInstance = Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation) as GameObject;
-
-		//SoundManager.Instance.PlayOneShot(SoundManager.Instance.explosion);
 		Destroy (explosionInstance, 0.5f);
+		Destroy (this.gameObject, 0.2f);
 	}
 
 	void OnTriggerEnter(Collider collider) {
@@ -60,7 +53,6 @@ public class Asteroid : MonoBehaviour {
 
 		} else if (collider.tag == "PlayerShield") {
 			asteroidHitShield ();
-
 		}
 	}
 
@@ -68,25 +60,21 @@ public class Asteroid : MonoBehaviour {
 		gameController.scoringSystem.increaseScore (); 
 		//gameController.reduceCounterOf ("Asteroid");
 		Destroy (bullet);
-		Destroy (this.gameObject);
-		//explode (); // explode is called from ondestroy
+		explode (); 
 	}
 
 	void asteroidHitShield() {
 		gameController.scoringSystem.increaseScore (); 
-		Destroy (this.gameObject);
-		//explode (); // explode is called from ondestroy
+		explode (); 
 	}
 
 	void asteroidHitPlayer(GameObject player) {// player's bullet hit an asteroid
 		gameController.gameOver();
-		Destroy (this.gameObject);
-		//Destroy (player);
-		//explode ();
+		//TODO:Destroy (player);
+		explode ();
 	}
 
 	void OnDestroy() {
-		gameController.reduceCounterOf ("Asteroid");
-		explode ();
+		gameController.removeFromList ("asteroid", this.gameObject);
 	}
 }

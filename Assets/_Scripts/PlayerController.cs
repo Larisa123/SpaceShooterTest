@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour {
 	public Vector3 boundaryMin; // player boundary
 	public Vector3 boundaryMax; // player boundary
 	private Rigidbody rb;
-	//private bool movingRight = false;
 	public GameObject playerExplosion;
 	public BulletType bulletType = BulletType.Regular;
 	public float bulletImpulse;
@@ -26,7 +25,6 @@ public class PlayerController : MonoBehaviour {
 	private GameObject shield;
 	public float shieldDuration;
 	public bool hasShieldOn = false;
-	//private AudioSource shieldPickUpSound;
 
 	// BULLET:
 	public GameObject bullet;
@@ -42,7 +40,6 @@ public class PlayerController : MonoBehaviour {
 	void Start() {
 		//shieldPickUpSound = GetComponent<AudioSource> ();
 		shield = this.gameObject.transform.FindChild("Player Shield").gameObject;
-		//gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		rb = GetComponent<Rigidbody> ();
 
 	}
@@ -65,7 +62,6 @@ public class PlayerController : MonoBehaviour {
 			demonHitPlayer (collision.collider.gameObject);
 
 		} else if (collision.collider.tag == "PlayerShieldPickUp") {
-			Debug.Log ("Player picked up shield from player");
 			shieldPickedUp (collision.collider.gameObject);
 
 		} 
@@ -126,13 +122,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void shootRegularBullet() {
-		//Instantiate(bullet, transform.position, transform.rotation);
-		//GetComponent<AudioSource>().Play (); // sound effect
-		//StartCoroutine(thrustPlayerBack());
 		GameObject bulletInstance = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
 		Rigidbody bulletInstanceRb = bulletInstance.GetComponent<Rigidbody> ();
 		bulletInstanceRb.velocity = new Vector3 (0.0f, 0.0f, 1.0f) * bulletImpulse;
-		//bulletInstanceRb.angularVelocity = transform.rotation * transform.forward * bulletImpulse;
 	}
 
 	void shootTwoRegularBullets() {
@@ -171,15 +163,13 @@ public class PlayerController : MonoBehaviour {
 	// Pick Ups:
 
 	void shieldPickedUp(GameObject shieldPickUp) {
+		GameObject audioSourceObject = shieldPickUp.GetComponent<AudioSource> ().gameObject;
+		audioSourceObject.SetActive (true);
 		if (hasShieldOn) {
 			gameController.scoringSystem.increaseScore ();
 			return;
 		}
-		GameObject audioSourceObject = shieldPickUp.GetComponent<AudioSource> ().gameObject;
-		audioSourceObject.SetActive (true);
 		Destroy (shieldPickUp, 0.2f);
-		//GameObject shieldInstance = Instantiate (shield, this.transform.position, this.transform.rotation) as GameObject;
-		//Instantiate (shield, this.transform.position, this.transform.rotation);
 		hasShieldOn = true;
 		shield.SetActive (true);
 		StartCoroutine (endShield());

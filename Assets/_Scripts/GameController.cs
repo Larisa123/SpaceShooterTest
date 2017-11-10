@@ -18,22 +18,19 @@ public class GameController : MonoBehaviour {
 	public int asteroidSpawnCount;
 	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
-
-	public Camera mainCamera;
-	private Shake shakeScript;
+	private static List<GameObject> asteroidsOnScreen;
 
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private static int demonCount = 0;
-	private int[] maxDemonsOnScreen = {3, 4, 7, 10, 15, 20}; // depends on the level
-	private int[] numberOfShieldPickUps = {1, 2, 3, 4, 5, 7};
-	private List<GameObject> demonsOnScreen;
-	private List<GameObject> asteroidsOnScreen;
+	private int[] maxDemonsOnScreen; // depends on the level
+	private static List<GameObject> demonsOnScreen;
 
 	//PickUps
 	public GameObject shieldPickUp;
 	private static int shieldPickUpCount = 0;
-	private List<GameObject> shieldpickupsOnScreen;
+	private static List<GameObject> shieldpickupsOnScreen;
+	private int[] maxShieldPickUpsOnScreen = {1, 2, 3, 4, 5, 7}; // depends on the level
 
 	//Player:
 	public PlayerController player;
@@ -41,18 +38,24 @@ public class GameController : MonoBehaviour {
 	// Score:
 	public Score scoringSystem;
 
-	// Canvas:
+	// Canvas, Cameras:
 	public GameObject welcomeScreen;
 
+	public Camera mainCamera;
+	private Shake shakeScript;
 	[SerializeField] private GameObject secondCameraScreen;
 
+
 	void Start () {
+		instantiateOnStart ();
+	}
+
+	void instantiateOnStart() {
 		showWelcomeScreen ();
 		instantiateLists ();
+		resetMaxDemonsOnScreenList ();
 		shakeScript = mainCamera.GetComponent<Shake> ();
-		//TODO: add a reference and a method for the play button
-		//TODO: create game over screen and play again button 
-
+		//TODO: create game over screen and play again button
 	}
 
 	void instantiateLists() {
@@ -64,6 +67,7 @@ public class GameController : MonoBehaviour {
 	// Clicks:
 
 	public void OnPlayButtonClick() { // gets called when the user clickes the Play button on Welcome screen
+		Debug.Log("Play button clicked");
 		startNewGame(); // resets the score, game state and stuff like that
 	}
 
@@ -72,16 +76,22 @@ public class GameController : MonoBehaviour {
 
 	public void endTheGame() {
 		stopCoroutines ();
-		emptyArray ("Demon");
-		//TODO: empty asteroid array - create asteroid array
+
+		// empty lists:
+		foreach(string name in new string[3] {"Demon", "Asteroid", "ShieldPickUp"}) {
+			emptyList(name);
+		}
 	}
 
 	public void startNewGame() {
 		hideWelcomeScreen ();
 		scoringSystem.resetScoringSystem ();
+		resetMaxDemonsOnScreenList ();
 
 		showSecondCameraScreen ();
 		resetCounters ();
+		StartCoroutine (SpawnAsteroidsAndDemons ());
+
 		// call other functions
 	}
 
@@ -92,7 +102,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void stopCoroutines() {
-		try { StopCoroutine (SpawnAsteroids()); } catch {}
+		try { StopCoroutine (SpawnAsteroidsAndDemons()); } catch {}
 		try { StopCoroutine (SpawnShieldPickUps()); } catch {}
 	}
 		
@@ -110,13 +120,13 @@ public class GameController : MonoBehaviour {
 	void showSecondCameraScreen () {
 		secondCameraScreen.SetActive (true);
 	}
-		
 
 	// Asteroids:
 
-	public IEnumerator SpawnAsteroids () {
+	public IEnumerator SpawnAsteroidsAndDemons () {
 		//yield return new WaitForSeconds (startWait);
 		while (scoringSystem.gameState == GameState.Playing) {
+			
 			for (int i = 0; i < asteroidSpawnCount; i++) {
 				instantiateAsteroidAndDemon ();
 				yield return new WaitForSeconds (spawnWait);
@@ -136,35 +146,102 @@ public class GameController : MonoBehaviour {
 			instantiate ("Demon", spawnPosition, spawnRotation);
 	}
 
-	public Vector3 randomPositionInBoundary(Vector3 min, Vector3 max) {
-		return new Vector3 (
-			Random.Range (min.x, max.x), 
-			Random.Range (min.y, max.y), 
-			Random.Range (min.z, max.z)
+
+	// Demons:
+
+	public void makeDemonsAngrier() {
+		foreach (GameObject demon in demonsOnScreen) {
+			Demon demonScript = demon.GetComponent<Demon> ();
+			demonScript.increaseShootingRate ();
+		}
+		// increase the number of demons that should come out of rocks:
+		for (int i = 0; i < maxDemonsOnScreen.Length; i++) {
+			maxDemonsOnScreen [i]++;
+		}
+	}
+
+	void resetMaxDemonsOnScreenList() {
+		maxDemonsOnScreen = new int[6] {3, 4, 7, 10, 15, 20};
+	}
+
+	// Pick Ups:
+
+	public IEnumerator SpawnShieldPickUps () {
+		if (!shouldCreateNew("ShieldPickUp"))
+			yield break;
+
+		yield return new WaitForSeconds (5.0f * scoringSystem.getLevel());
+		for (int i = 0; i < getMaxNumberOnScreen("ShieldPickUp"); i++) {
+			instantiateShieldPickUp ();
+			yield return new WaitForSeconds (spawnWait * 100.0f * scoringSystem.getLevel());
+		}
+	}
+
+	public void instantiateShieldPickUp() {
+		Vector3 spawnPosition = new Vector3 (
+			Random.Range (-5.0f, 5.0f), 
+			Random.Range (-3.0f, 3.0f), 
+			Random.Range (5.0f, 10.0f)
 		);
+
+		Quaternion spawnRotation = Quaternion.identity;
+
+		instantiate ("ShieldPickUp", spawnPosition, spawnRotation);
+	}
+		
+
+	// Generic:
+
+	void instantiate(string name, Vector3 spawnPosition, Quaternion spawnRotation) {
+		GameObject objectToInstantiate = (name == "Asteroid") ? asteroid : (name == "Demon") ? demon : shieldPickUp;
+		GameObject objectInstance = Instantiate (objectToInstantiate, spawnPosition, spawnRotation) as GameObject;
+
+		addToList (name, objectInstance); // addToList also increases the appropriate counter
+	}
+
+	public void removeFromList(string name, GameObject objectInstance) {
+		getCorrectList(name).Remove(objectInstance);
+		reduceCounterOf (name);
+	}
+
+	void addToList (string name, GameObject objectInstance) {
+		getCorrectList (name).Add (objectInstance);
+		increaseCounterOf (name);
+	}
+
+	public void emptyList(string name) {
+		List<GameObject> list = getCorrectList (name);
+		foreach (GameObject objectInstance in list) {
+			Destroy (objectInstance);
+		}
+		list.Clear ();
+
+	}
+
+	static List<GameObject> getCorrectList(string name) {
+		return (name == "Asteroid") ? asteroidsOnScreen : (name == "Demon") ? demonsOnScreen : shieldpickupsOnScreen;
 	}
 
 	public void increaseCounterOf(string objectsTag) {
 		if (objectsTag == "Asteroid")
 			asteroidCount++;
-		
+
 		else if (objectsTag == "Demon")
 			demonCount++;
-		
+
 		else if (objectsTag == "ShieldPickUp")
 			shieldPickUpCount++;
 	}
 
 	public void reduceCounterOf(string objectsTag) {
-		//Debug.Log (string.Format ("asteroids: {0}, demons: {1}, pickups: {2}", asteroidCount, demonCount, shieldPickUpCount));
 		if (objectsTag == "Asteroid") {
 			if (asteroidCount > 0) 
 				asteroidCount--;
-			
+
 		} else if (objectsTag == "Demon") {
 			if (demonCount > 0) 
 				demonCount--;
-			
+
 		} else if (objectsTag == "ShieldPickUp") {
 			if (shieldPickUpCount > 0) 
 				shieldPickUpCount--;
@@ -176,31 +253,6 @@ public class GameController : MonoBehaviour {
 		demonCount = 0;
 		shieldPickUpCount = 0;
 	}
-		
-
-	// Demons:
-
-	public void makeDemonsAngrier() {
-		foreach (GameObject demon in demonsOnScreen) {
-			Demon demonScript = demon.GetComponent<Demon> ();
-			demonScript.increaseShootingRate ();
-		}
-	}
-
-	public void demonEnteredPlayersShiels(GameObject demon) {
-		//reduceCounterOf ("Demon");
-		Destroy (demon);
-	}
-		
-
-	// Generic:
-
-	void instantiate(string name, Vector3 spawnPosition, Quaternion spawnRotation) {
-		GameObject objectToInstantiate = (name == "Asteroid") ? asteroid : (name == "Demon") ? demon : shieldPickUp;
-		GameObject objectInstance = Instantiate (objectToInstantiate, spawnPosition, spawnRotation) as GameObject;
-
-		addToList (name, objectInstance); // also increases the appropriate counter
-	}
 
 	int getMaxNumberOnScreen(string objectsName) {
 		switch (objectsName) {
@@ -209,7 +261,7 @@ public class GameController : MonoBehaviour {
 		case "Demon":
 			return maxDemonsOnScreen [scoringSystem.getLevel () - 1];
 		case "ShieldPickUp":
-			return numberOfShieldPickUps [scoringSystem.getLevel () - 1];
+			return maxShieldPickUpsOnScreen [scoringSystem.getLevel () - 1];
 		default:
 			return 0; // shoudn't even come to this, but if it does, it ensures the game doesnt crash
 		} 
@@ -232,50 +284,11 @@ public class GameController : MonoBehaviour {
 		} 
 	}
 
-	public void removeFromArray(string name, GameObject objectInstance) {
-		getCorrectList(name).Remove(objectInstance);
-		reduceCounterOf (name);
-	}
-
-	void addToList (string name, GameObject objectInstance) {
-		getCorrectList (name).Add (objectInstance);
-		increaseCounterOf (name);
-	}
-
-	public void emptyArray(string name) {
-		foreach (GameObject objectInstance in getCorrectList(name)) {
-			Destroy (objectInstance);
-		}
-		resetCounters ();
-		instantiateLists ();
-	}
-
-	List<GameObject> getCorrectList(string name) {
-		return (name == "Asteroid") ? asteroidsOnScreen : (name == "Demon") ? demonsOnScreen : shieldpickupsOnScreen;
-	}
-		
-	// Pick Ups:
-
-	public IEnumerator SpawnShieldPickUps () {
-		if (!shouldCreateNew("ShieldPickUp"))
-			yield break;
-		
-		yield return new WaitForSeconds (5.0f * scoringSystem.getLevel());
-		for (int i = 0; i < getMaxNumberOnScreen("ShieldPickUp"); i++) {
-			instantiateShieldPickUp ();
-			yield return new WaitForSeconds (spawnWait * 100.0f * scoringSystem.getLevel());
-		}
-	}
-
-	public void instantiateShieldPickUp() {
-		Vector3 spawnPosition = new Vector3 (
-			Random.Range (-5.0f, 5.0f), 
-			Random.Range (-3.0f, 3.0f), 
-			Random.Range (5.0f, 10.0f)
+	public Vector3 randomPositionInBoundary(Vector3 min, Vector3 max) {
+		return new Vector3 (
+			Random.Range (min.x, max.x), 
+			Random.Range (min.y, max.y), 
+			Random.Range (min.z, max.z)
 		);
-			
-		Quaternion spawnRotation = Quaternion.identity;
-
-		instantiate ("ShieldPickUp", spawnPosition, spawnRotation);
 	}
 }
