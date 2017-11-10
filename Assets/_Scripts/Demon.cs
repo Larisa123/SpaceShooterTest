@@ -13,12 +13,14 @@ public class Demon : MonoBehaviour {
 	public float fireRate;
 	public float startBulletShootWait;
 	public int minDistanceFromPlayer;
+	private Rigidbody rb;
 
 
 	public Animator animator;
 	private GameController gameController;
 
 	void Start() {
+		rb = GetComponent<Rigidbody> ();
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
 		playerPos = gameController.player.GetComponent<Transform> ();
 
@@ -34,8 +36,9 @@ public class Demon : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		GameObject collider = collision.collider.gameObject;
-		if (collider.tag == "PlayerBullet")
-			bulletHitDemon(collider);
+		if (collider.tag == "PlayerBullet") {
+			bulletHitDemon(collider); 
+		}
 	}
 
 	/*
@@ -50,17 +53,17 @@ public class Demon : MonoBehaviour {
 
 	void bulletHitDemon(GameObject bulletInstance) {
 		//gameController.reduceCounterOf ("Demon");
-		gameController.scoringSystem.increaseScore ();
+		gameController.scoringSystem.reduceScore ();
 		Destroy (bulletInstance);
 		Destroy (this.gameObject);
 	}
 
 	void giveDemonVelocity() {
-		Rigidbody rb = GetComponent<Rigidbody> ();
-		PlayerController player = gameController.player;
 		// target position somewhere towards the player bpundary but with a bigger z:
 		//Vector3 minAdjustment = new Vector3(2.0f, 2.0f, minDistanceFromPlayer);
 		//Vector3 maxAdjustment = new Vector3(2.0f, 2.0f, minDistanceFromPlayer + 2.0f);
+
+		PlayerController player = gameController.player;
 
 		Vector3 min = player.boundaryMin + new Vector3(2.0f, 2.0f, minDistanceFromPlayer);
 		Vector3 max = player.boundaryMax + new Vector3(-2.0f, -2.0f, minDistanceFromPlayer + 2.0f);
@@ -69,6 +72,10 @@ public class Demon : MonoBehaviour {
 		Vector3 targetPosition = gameController.randomPositionInBoundary (min, max);
 		rb.velocity = (targetPosition - transform.position).normalized * demonSpeed; 
 		Debug.Log (rb.velocity);
+	}
+
+	public void increaseShootingRate() {
+		fireRate /= 1.5f;
 	}
 
 
@@ -95,6 +102,7 @@ public class Demon : MonoBehaviour {
 
 	void OnDestroy() {
 		gameController.reduceCounterOf ("Demon");
+		gameController.makeDemonsAngrier ();// other demons should get angry
 		explode ();
 	}
 }

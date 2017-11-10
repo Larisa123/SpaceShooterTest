@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 enum TutorialState {Start, HowToMove, HowToShoot, Finished}
 
@@ -25,6 +27,7 @@ public class GameController : MonoBehaviour {
 	private static int demonCount = 0;
 	private int[] maxDemonsOnScreen = {3, 4, 7, 10, 15, 20}; // depends on the level
 	private int[] numberOfShieldPickUps = {1, 2, 3, 4, 5, 7};
+	private List<GameObject> demonsOnScreen;
 
 	//PickUps
 	public GameObject shieldPickUp;
@@ -39,6 +42,7 @@ public class GameController : MonoBehaviour {
 	[SerializeField] private GameObject secondCameraScreen;
 
 	void Start () {
+		demonsOnScreen = new List<GameObject> ();
 		shakeScript = mainCamera.GetComponent<Shake> ();
 		showSecondCameraScreen ();
 		resetCounters ();
@@ -146,8 +150,24 @@ public class GameController : MonoBehaviour {
 	}
 
 	void instantiateDemon(Vector3 spawnPosition, Quaternion spawnRotation) {
-		Instantiate (demon, spawnPosition, spawnRotation); // TO DO: DEMON IN NEW METHOD!
+		GameObject demonInstance = Instantiate (demon, spawnPosition, spawnRotation) as GameObject;
+		demonsOnScreen.Add (demonInstance);
 		increaseCounterOf("Demon");
+	}
+
+	void removeDemonFromArray(GameObject demonInstance) {
+		demonsOnScreen.Remove (demonInstance);
+	}
+
+	public void emptyDemonArray() {
+		demonsOnScreen.Clear();
+	}
+
+	public void makeDemonsAngrier() {
+		foreach (GameObject demon in demonsOnScreen) {
+			Demon demonScript = demon.GetComponent<Demon> ();
+			demonScript.increaseShootingRate ();
+		}
 	}
 
 	public void demonEnteredPlayersShiels(GameObject demon) {
