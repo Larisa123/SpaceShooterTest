@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour {
 	public int asteroidSpawnCount;
 	public int asteroidMaxOnScreen;
 	public GameObject asteroid;
+
 	public Camera mainCamera;
 	private Shake shakeScript;
 

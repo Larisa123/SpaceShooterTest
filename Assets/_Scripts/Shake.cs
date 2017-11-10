@@ -3,10 +3,12 @@ using System.Collections;
 
 // THIS SCRIPT IS NOT MINE!
 // I USED THE CODE FROM THIS TUTORIAL: http://unitytipsandtricks.blogspot.si/2013/05/camera-shake.html
+// and added the flashing red part
 
 public class Shake : MonoBehaviour {
 	public float duration;
 	public float magnitude;
+	public GameObject redScreen;
 
 	public IEnumerator CameraShake() {
 
@@ -15,7 +17,7 @@ public class Shake : MonoBehaviour {
 		Vector3 originalPos = transform.position;
 
 		while (elapsed < duration) {
-
+			redScreen.SetActive (!redScreen.activeSelf); // flashing effect
 			elapsed += Time.deltaTime;          
 
 			float percentComplete = elapsed / duration;         
@@ -32,6 +34,7 @@ public class Shake : MonoBehaviour {
 		}
 
 		transform.position = originalPos;
+		redScreen.SetActive (false);
 	}
 
 }
