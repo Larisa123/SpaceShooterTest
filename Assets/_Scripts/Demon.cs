@@ -28,10 +28,12 @@ public class Demon : MonoBehaviour {
 		StartCoroutine (shootBulletsCoroutine());
 	}
 
-
 	void Update () {
-		this.gameObject.transform.LookAt (playerPos);
-		//transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * demonSpeed);
+		if (gameController.scoringSystem.gameState == GameState.Playing) {
+			this.gameObject.transform.LookAt (playerPos);
+		} else {
+			try { StopCoroutine (shootBulletsCoroutine()); } catch {}
+		}
 	}
 
 	void OnCollisionEnter(Collision collision) {

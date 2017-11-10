@@ -39,13 +39,38 @@ public class GameController : MonoBehaviour {
 	// Score:
 	public Score scoringSystem;
 
+	// Canvas:
+	public GameObject welcomeScreen;
+
 	[SerializeField] private GameObject secondCameraScreen;
 
 	void Start () {
+		welcomeScreen.SetActive (true);
 		demonsOnScreen = new List<GameObject> ();
 		shakeScript = mainCamera.GetComponent<Shake> ();
+		//TODO: add a reference and a method for the play button
+		//TODO: create game over screen and play again button 
+
+	}
+
+	public void endTheGame() {
+		stopCoroutines ();
+		emptyDemonArray ();
+		//TODO: empty asteroid array - create asteroid array
+	}
+
+	void stopCoroutines() {
+		try { StopCoroutine (SpawnAsteroids()); } catch {}
+		try { StopCoroutine (SpawnShieldPickUps()); } catch {}
+	}
+
+	public void startNewGame() {
+		welcomeScreen.SetActive (false);
+		scoringSystem.resetScoringSystem ();
+
 		showSecondCameraScreen ();
 		resetCounters ();
+		// call other functions
 	}
 
 	public void shakeCamera() {
@@ -55,22 +80,10 @@ public class GameController : MonoBehaviour {
 	void showSecondCameraScreen () {
 		secondCameraScreen.SetActive (true);
 	}
-
-	/*                        RESTART:
-	void Update ()
-	{
-		if (restart)
-		{
-			if (Input.GetKeyDown (KeyCode.R))
-			{
-				Application.LoadLevel (Application.loadedLevel);
-			}
-		}
-	}
-	*/
-
+		
 	public void gameOver() {
-		Debug.Log ("Game over");
+		endTheGame ();
+		scoringSystem.resetScoringSystem ();
 	}
 
 	// Asteroids:
@@ -160,7 +173,10 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void emptyDemonArray() {
-		demonsOnScreen.Clear();
+		foreach (GameObject demon in demonsOnScreen) {
+			Destroy (demon);
+		} 
+		Debug.Log ("number of items in demonarray after emptying it: " + demonsOnScreen.Count);
 	}
 
 	public void makeDemonsAngrier() {

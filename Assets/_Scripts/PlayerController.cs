@@ -48,11 +48,16 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update () {
-		shootBullets ();
+		if (gameController.scoringSystem.gameState == GameState.Playing) {
+			shootBullets ();
+		} else {
+			try { StopCoroutine (endShield()); } catch {}
+		}
 	}
 
 	void FixedUpdate () {
-		movePlayer ();
+		if (gameController.scoringSystem.gameState == GameState.Playing)
+			movePlayer ();
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -69,6 +74,7 @@ public class PlayerController : MonoBehaviour {
 	// Move player:
 
 	void movePlayer() {
+		// This code will only get exectuted it game state is set to .playing
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 

@@ -35,7 +35,7 @@ public class Score : MonoBehaviour {
 
 	void Start() {
 		//gameController = GetComponent<GameController> ();
-		resetScoringSystem (); // initializes the score and level
+		//resetScoringSystem (); // initializes the score and level
 	}
 
 	public void resetScoringSystem() {
