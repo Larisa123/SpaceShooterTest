@@ -6,11 +6,9 @@ public class ShieldPickedUp : MonoBehaviour {
 	public float speed;
 	public float removeZ;
 	private GameController gameController;
-	private AudioSource shieldPickUpSound;
 
 	void Start() {
 		gameController = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-		shieldPickUpSound = GetComponent<AudioSource> ();
 		giveVelocity ();
 	}
 
@@ -38,7 +36,7 @@ public class ShieldPickedUp : MonoBehaviour {
 		if (collision.collider.gameObject.CompareTag ("Player")) {
 			Debug.Log ("Player picked up shield from shield");
 			//shieldPickUpSound.mute = false;
-			shieldPickUpSound.Play ();
+			//SoundManager.Instance.PlayOneShot(SoundManager.Instance.shieldPickedUp);
 		}
 	}
 }

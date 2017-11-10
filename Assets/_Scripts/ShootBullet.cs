@@ -4,7 +4,6 @@ using System.Collections;
 public class ShootBullet : MonoBehaviour {
 	public int removeBulletZ;
 
-
 	void Update() {
 		checkIfOutOfBounds ();
 	}
