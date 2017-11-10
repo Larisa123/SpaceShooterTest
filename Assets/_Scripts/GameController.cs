@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic;
 
 
 enum TutorialState {Start, HowToMove, HowToShoot, Finished}
 
 public class GameController : MonoBehaviour {
-
 
 	// ASTEROIDS:
 	public float spawnWait;
@@ -155,7 +154,7 @@ public class GameController : MonoBehaviour {
 		increaseCounterOf("Demon");
 	}
 
-	void removeDemonFromArray(GameObject demonInstance) {
+	public void removeDemonFromArray(GameObject demonInstance) {
 		demonsOnScreen.Remove (demonInstance);
 	}
 

@@ -55,7 +55,8 @@ public class Demon : MonoBehaviour {
 		//gameController.reduceCounterOf ("Demon");
 		gameController.scoringSystem.reduceScore ();
 		Destroy (bulletInstance);
-		Destroy (this.gameObject);
+		Destroy (this.gameObject, 0.2f);
+		explode ();
 	}
 
 	void giveDemonVelocity() {
@@ -97,12 +98,12 @@ public class Demon : MonoBehaviour {
 	void explode() {
 		GameObject explosionInstance = Instantiate (demonExplosion, this.transform.position, this.transform.rotation) as GameObject;
 		//SoundManager.Instance.PlayOneShot(SoundManager.Instance.explosion);
-		Destroy (explosionInstance, 1.0f);
+		Destroy (explosionInstance, 1.5f);
 	}
 
 	void OnDestroy() {
+		gameController.removeDemonFromArray (this.gameObject);
 		gameController.reduceCounterOf ("Demon");
 		gameController.makeDemonsAngrier ();// other demons should get angry
-		explode ();
 	}
 }
