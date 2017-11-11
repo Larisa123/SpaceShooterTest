@@ -24,8 +24,10 @@ public class GameController : MonoBehaviour {
 	public GameObject demon;
 	private static int demonCount = 0;
 	[HideInInspector] public int howManyHasHeKilled = 0;
+	private const int allowedNumberOfDemonsKilled = 4;
 	private int[] maxDemonsOnScreen; // depends on the level
 	private static List<GameObject> demonsOnScreen;
+	[HideInInspector] public bool killedByDemons = false;
 
 	//PickUps
 	public GameObject shieldPickUp;
@@ -76,10 +78,26 @@ public class GameController : MonoBehaviour {
 
 	// Game:
 
+	public void startNewGame() {
+		hideWelcomeScreen ();
+		showPlayer ();
+		scoringSystem.resetScoringSystem ();
+		scoringSystem.showPlayCanvasComponents (true);
+		resetMaxDemonsOnScreenList ();
+
+		showSecondCameraScreen (true);
+		resetCounters ();
+		StartCoroutine (SpawnAsteroidsAndDemons ());
+
+		// call other functions
+	}
+
 	public void endTheGame() {
 		scoringSystem.gameState = GameState.GameOverScreen;
+		scoringSystem.showPlayCanvasComponents (false);
+		showSecondCameraScreen (false);
 		hidePlayer ();
-		stopCoroutines ();
+		//stopCoroutines ();
 
 		// empty lists:
 		foreach(string name in new string[3] {"Demon", "Asteroid", "ShieldPickUp"}) {
@@ -87,29 +105,37 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	public void startNewGame() {
-		hideWelcomeScreen ();
-		showPlayer ();
-		scoringSystem.resetScoringSystem ();
-		resetMaxDemonsOnScreenList ();
-
-		showSecondCameraScreen ();
-		resetCounters ();
-		StartCoroutine (SpawnAsteroidsAndDemons ());
-
-		// call other functions
-	}
-
 	public void gameOver() {
 		endTheGame ();
+		setAppropriateGameOverMessage ();
 		//scoringSystem.resetScoringSystem ();
 		// show game over screen
+		//TODO: some objects dont get destroyed, destroy them manually!
+	}
+		
+	void setAppropriateGameOverMessage() {
+		string appropriateMessage = getAppropriateGameOverText ();
+		string message = "Game Over!\n\n" + appropriateMessage;
+		Debug.Log ("Game Over!\n\n" +getAppropriateGameOverText());
+		//TODO: why doesnt it work??
+	}
+
+	string getAppropriateGameOverText() {
+		if (tooManyDemonsKilled()) {
+			if (killedByDemons)
+				return GameOverText.KilledByDemonsKilledToManyDemons;
+			else
+				return GameOverText.KilledByAsteroidKilledToManyDemons;
+		}
+		if (killedByDemons)
+			return GameOverText.KilledByDemons;
+		return GameOverText.KilledByAsteroid;
 	}
 
 	void stopCoroutines() {
 		//try { StopCoroutine (SpawnAsteroidsAndDemons()); } catch {}
 		//try { StopCoroutine (SpawnShieldPickUps()); } catch {}
-		try { stopCoroutines(); } catch {Debug.Log("Coroutines werent properly stopped");}
+		//try { stopCoroutines(); } catch {Debug.Log("Coroutines werent properly stopped");}
 	}
 		
 	// Welcome, game over screen:
@@ -126,8 +152,8 @@ public class GameController : MonoBehaviour {
 		StartCoroutine(shakeScript.CameraShake ());
 	}
 
-	void showSecondCameraScreen () {
-		secondCameraScreen.SetActive (true);
+	void showSecondCameraScreen (bool value) {
+		secondCameraScreen.SetActive (value);
 	}
 
 	// Asteroids:
@@ -173,9 +199,15 @@ public class GameController : MonoBehaviour {
 		maxDemonsOnScreen = new int[6] {3, 4, 7, 10, 15, 20};
 	}
 
+	bool tooManyDemonsKilled() {
+		return howManyHasHeKilled >= allowedNumberOfDemonsKilled;
+	}
+
 	// Pick Ups:
 
 	public IEnumerator SpawnShieldPickUps () {
+		if (scoringSystem.gameState != GameState.Playing)
+			yield break;
 		if (!shouldCreateNew("ShieldPickUp"))
 			yield break;
 
@@ -192,7 +224,6 @@ public class GameController : MonoBehaviour {
 			Random.Range (-3.0f, 3.0f), 
 			Random.Range (5.0f, 10.0f)
 		);
-
 		Quaternion spawnRotation = Quaternion.identity;
 
 		instantiate ("ShieldPickUp", spawnPosition, spawnRotation);
@@ -220,10 +251,9 @@ public class GameController : MonoBehaviour {
 
 	public void emptyList(string name) {
 		List<GameObject> list = getCorrectList (name);
-
-
 		GameObject[] tempArray = new GameObject[list.Count];
 		int i = 0;
+
 		foreach (GameObject objectInstance in list) {
 			tempArray [i] = objectInstance;
 			i++;
@@ -270,6 +300,7 @@ public class GameController : MonoBehaviour {
 		demonCount = 0;
 		shieldPickUpCount = 0;
 		howManyHasHeKilled = 0;
+		killedByDemons = false;
 	}
 
 	int getMaxNumberOnScreen(string objectsName) {
@@ -308,32 +339,5 @@ public class GameController : MonoBehaviour {
 			Random.Range (min.y, max.y), 
 			Random.Range (min.z, max.z)
 		);
-	}
-}
-
-public struct GameOverText {
-	public const string KilledByDemonsKilledToManyDemons = "I told you, killing them is not the way to go, " +
-		"try to make them accept you!\n\n" +
-		"I will give you one more chance:";
-	public const string KilledByDemons = "Great job on trying to avoid killing the demons! " +
-		"They seem to have not accepted you yet..\n\n" +
-		"Try again:";
-	public const string KilledByAsteroid = "Nice job on trying to avoid killing the demons!\n\n " +
-		"Try again and also be more careful of rocks:";
-	public const string KilledByAsteroidKilledToManyDemons = "You got killed by an asteroid this time but you had that coming. " +
-		"You killed way too many of them, they turn very hostile " +
-		"when their family members are dying so be careful!\n\n" +
-		"I will give you one more chance:";
-
-	public string getAppropriateText(bool killedToManyDemons, bool killedByDemons) {
-		if (killedToManyDemons) {
-			if (killedByDemons)
-				return GameOverText.KilledByDemonsKilledToManyDemons;
-			else
-				return GameOverText.KilledByAsteroidKilledToManyDemons;
-		}
-		if (killedByDemons)
-			return GameOverText.KilledByDemons;
-		return GameOverText.KilledByAsteroid;
 	}
 }

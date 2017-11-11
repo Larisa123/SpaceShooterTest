@@ -70,6 +70,8 @@ public class Demon : MonoBehaviour {
 	public void increaseShootingRate() { fireRate = (fireRate > 0.4f)? fireRate / 1.5f: 0.4f ;}
 
 	IEnumerator shootBulletsCoroutine () {
+		if (gameController.scoringSystem.gameState != GameState.Playing) yield break;
+
 		yield return new WaitForSeconds (startBulletShootWait);
 		while (gameController.scoringSystem.gameState == GameState.Playing) {
 			shootBullet ();

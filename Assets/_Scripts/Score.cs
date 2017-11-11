@@ -47,7 +47,8 @@ public class Score : MonoBehaviour {
 	void resetScore() { 
 		score = 0; 
 		scoreTextObject.SetActive (true);
-		updateUI ();}
+		updateUI ();
+	}
 
 	public int getLevel() { return level; }
 	void resetLevel() { level = 1;}
@@ -77,7 +78,7 @@ public class Score : MonoBehaviour {
 	}
 
 	void levelUpgraded() {
-		// TO DO: show something on screen (as congratulations)
+		// TODO: show something on screen (as congratulations)
 		gameController.playerController.increaseBulletType ();
 		StartCoroutine (gameController.SpawnShieldPickUps ());
 	}
@@ -86,14 +87,18 @@ public class Score : MonoBehaviour {
 		updateUI ();
 	}
 
+
 	// Player:
 
 	public void reducePlayersHealth() {
 		if (playersHealth > 0.2f) {
 			playersHealth -= 0.2f;
 			updateHealthBar ();
-		} else if (playersHealth == 0.2f)
+		} else if (playersHealth <= 0.2f) {
+			playersHealth = 0.0f;
+			gameController.killedByDemons = true;
 			gameController.gameOver ();
+		}
 	}
 
 	public void increasePlayersHealth() {
@@ -105,7 +110,6 @@ public class Score : MonoBehaviour {
 
 	public void resetPlayersHealth() {
 		playersHealth = 1.0f;
-		healthBarObject.SetActive (true);
 		healthBar.color = Color.green;
 		updateHealthBar ();
 	}
@@ -143,4 +147,25 @@ public class Score : MonoBehaviour {
 	private void updateUI() {
 		scoreText.text = getUIString ();
 	}
+
+	public void showPlayCanvasComponents(bool value) {
+		healthBarObject.SetActive (value);
+		scoreTextObject.SetActive (value);
+	}
+}
+
+
+public struct GameOverText {
+	public const string KilledByDemonsKilledToManyDemons = "I told you, killing them is not the way to go, " +
+		"try to make them accept you!\n\n" +
+		"I will give you one more chance:";
+	public const string KilledByDemons = "Great job on trying to avoid killing the demons! " +
+		"They seem to have not accepted you yet..\n\n" +
+		"Try again:";
+	public const string KilledByAsteroid = "Nice job on trying to avoid killing the demons!\n\n " +
+		"Try again and also be more careful of rocks:";
+	public const string KilledByAsteroidKilledToManyDemons = "You got killed by an asteroid this time but you had that coming. " +
+		"You killed way too many of them, they turn very hostile " +
+		"when their family members are dying so be careful!\n\n" +
+		"I will give you one more chance:";
 }

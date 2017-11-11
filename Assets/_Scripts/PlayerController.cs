@@ -170,15 +170,23 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 		Destroy (shieldPickUp, 0.2f);
-		hasShieldOn = true;
-		shield.SetActive (true);
+		showShield (true);
 		StartCoroutine (endShield());
 	}
 
 	IEnumerator endShield() {
+		if (gameController.scoringSystem.gameState != GameState.Playing) {
+			showShield (false);
+			yield break;
+		}
+
 		yield return new WaitForSeconds (shieldDuration);
-		shield.SetActive (false);
-		hasShieldOn = false;
+		showShield (false);
+	}
+
+	void showShield (bool value) {
+		shield.SetActive (value);
+		hasShieldOn = value;
 	}
 
 
