@@ -31,7 +31,7 @@ public class Score : MonoBehaviour {
 		resetLevel ();
 		resetPlayersHealth ();
 		resetGameState ();
-		gameController.player.resetBulletType ();
+		gameController.playerController.resetBulletType ();
 	}
 
 	public int getScore () { return score; }
@@ -78,7 +78,7 @@ public class Score : MonoBehaviour {
 
 	void levelUpgraded() {
 		// TO DO: show something on screen (as congratulations)
-		gameController.player.increaseBulletType ();
+		gameController.playerController.increaseBulletType ();
 		StartCoroutine (gameController.SpawnShieldPickUps ());
 	}
 

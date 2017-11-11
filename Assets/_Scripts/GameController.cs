@@ -33,7 +33,8 @@ public class GameController : MonoBehaviour {
 	private int[] maxShieldPickUpsOnScreen = {1, 2, 3, 4, 5, 7}; // depends on the level
 
 	//Player:
-	public PlayerController player;
+	public GameObject player;
+	public PlayerController playerController;
 
 	// Score:
 	public Score scoringSystem;
@@ -54,6 +55,7 @@ public class GameController : MonoBehaviour {
 		showWelcomeScreen ();
 		instantiateLists ();
 		resetMaxDemonsOnScreenList ();
+		playerController = player.GetComponent<PlayerController> ();
 		shakeScript = mainCamera.GetComponent<Shake> ();
 		//TODO: create game over screen and play again button
 	}
@@ -66,8 +68,7 @@ public class GameController : MonoBehaviour {
 
 	// Clicks:
 
-	public void OnPlayButtonClick() { // gets called when the user clickes the Play button on Welcome screen
-		Debug.Log("Play button clicked");
+	public void OnPlayButtonClick() { // gets called automatically when the user clicks the Play button on Welcome screen
 		startNewGame(); // resets the score, game state and stuff like that
 	}
 
@@ -75,6 +76,8 @@ public class GameController : MonoBehaviour {
 	// Game:
 
 	public void endTheGame() {
+		scoringSystem.gameState = GameState.GameOverScreen;
+		hidePlayer ();
 		stopCoroutines ();
 
 		// empty lists:
@@ -85,6 +88,7 @@ public class GameController : MonoBehaviour {
 
 	public void startNewGame() {
 		hideWelcomeScreen ();
+		showPlayer ();
 		scoringSystem.resetScoringSystem ();
 		resetMaxDemonsOnScreenList ();
 
@@ -97,19 +101,23 @@ public class GameController : MonoBehaviour {
 
 	public void gameOver() {
 		endTheGame ();
-		scoringSystem.resetScoringSystem ();
+		//scoringSystem.resetScoringSystem ();
 		// show game over screen
 	}
 
 	void stopCoroutines() {
-		try { StopCoroutine (SpawnAsteroidsAndDemons()); } catch {}
-		try { StopCoroutine (SpawnShieldPickUps()); } catch {}
+		//try { StopCoroutine (SpawnAsteroidsAndDemons()); } catch {}
+		//try { StopCoroutine (SpawnShieldPickUps()); } catch {}
+		try { stopCoroutines(); } catch {Debug.Log("Coroutines werent properly stopped");}
 	}
 		
 	// Welcome, game over screen:
 
 	void showWelcomeScreen() { welcomeScreen.SetActive (true); }
 	void hideWelcomeScreen() { welcomeScreen.SetActive (false); }
+
+	void showPlayer() { player.SetActive (true); }
+	void hidePlayer() { player.SetActive (false); }
 
 	// Camera:
 
@@ -211,10 +219,17 @@ public class GameController : MonoBehaviour {
 
 	public void emptyList(string name) {
 		List<GameObject> list = getCorrectList (name);
+
+		/*
+		List<GameObject> tempList = new List<GameObject> ();
 		foreach (GameObject objectInstance in list) {
-			Destroy (objectInstance);
+			tempList.Add (objectInstance);
 		}
 		list.Clear ();
+		foreach (GameObject objectInstance in tempList) {
+			Destroy (objectInstance);
+		}
+		*/
 
 	}
 

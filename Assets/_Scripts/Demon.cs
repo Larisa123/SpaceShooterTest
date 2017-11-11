@@ -22,7 +22,7 @@ public class Demon : MonoBehaviour {
 	void Start() {
 		rb = GetComponent<Rigidbody> ();
 		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController> ();
-		playerPos = gameController.player.GetComponent<Transform> ();
+		playerPos = gameController.playerController.GetComponent<Transform> ();
 
 		giveDemonVelocity();
 		StartCoroutine (shootBulletsCoroutine());
@@ -57,7 +57,7 @@ public class Demon : MonoBehaviour {
 	}
 
 	void giveDemonVelocity() {
-		PlayerController player = gameController.player;
+		PlayerController player = gameController.playerController;
 
 		Vector3 min = player.boundaryMin + new Vector3(2.0f, 2.0f, minDistanceFromPlayer);
 		Vector3 max = player.boundaryMax + new Vector3(-2.0f, -2.0f, minDistanceFromPlayer + 2.0f);
