@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour {
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private static int demonCount = 0;
+	public int howManyHasHeKilled = 0;
 	private int[] maxDemonsOnScreen; // depends on the level
 	private static List<GameObject> demonsOnScreen;
 
@@ -267,6 +268,7 @@ public class GameController : MonoBehaviour {
 		asteroidCount = 0;
 		demonCount = 0;
 		shieldPickUpCount = 0;
+		howManyHasHeKilled = 0;
 	}
 
 	int getMaxNumberOnScreen(string objectsName) {
@@ -305,5 +307,27 @@ public class GameController : MonoBehaviour {
 			Random.Range (min.y, max.y), 
 			Random.Range (min.z, max.z)
 		);
+	}
+}
+
+public struct GameOverText:string {
+	public const string KilledByDemonsKilledToManyDemons = "I told you, killing them is not the way to go, " +
+		"try to make them accept you!\n\n" +
+		"I will give you one more chance:";
+	public const string KilledByDemons = "Great job on trying to avoid killing the demons! " +
+		"They seem to have not accepted you yet..\n\n" +
+		"Try again:";
+	public const string KilledByAsteroid = "Nice job on trying to avoid killing the demons!\n\n " +
+		"Try again and also be more careful of rocks:";
+	public const string KilledByAsteroidKilledToManyDemons = "You got killed by an asteroid this time but you had that coming. " +
+		"You killed way to many of them, they turn very hostile " +
+		"when their family members are dying so be careful!\n\n" +
+		"I will give you one more chance:";
+
+	public string getAppropriateText(bool killedToManyDemons, bool killedByDemons) {
+		if (killedToManyDemons) {
+			if (killedByDemons) return GameOverText.KilledByDemonsKilledToManyDemons;
+			else return GameOverText.KilledByAsteroidKilledToManyDemons
+		}
 	}
 }

@@ -92,6 +92,7 @@ public class Demon : MonoBehaviour {
 
 	void OnDestroy() {
 		gameController.removeFromList ("Demon", this.gameObject);
+		gameController.howManyHasHeKilled++;
 		gameController.makeDemonsAngrier ();// other demons should get angry
 	}
 }
