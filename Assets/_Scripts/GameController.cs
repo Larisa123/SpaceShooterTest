@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 
 enum TutorialState {Start, HowToMove, HowToShoot, Finished}
@@ -44,6 +45,9 @@ public class GameController : MonoBehaviour {
 
 	// Canvas, Cameras:
 	public GameObject welcomeScreen;
+	public GameObject gameOverScreen;
+	public Text gameOverMessageText;
+	[HideInInspector] private bool gameOverScreenShowing = false;
 
 	public Camera mainCamera;
 	private Shake shakeScript;
@@ -55,7 +59,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void instantiateOnStart() {
-		showWelcomeScreen ();
+		showWelcomeScreen (true);
 		instantiateLists ();
 		resetMaxDemonsOnScreenList ();
 		playerController = player.GetComponent<PlayerController> ();
@@ -71,7 +75,7 @@ public class GameController : MonoBehaviour {
 
 	// Clicks:
 
-	public void OnPlayButtonClick() { // gets called automatically when the user clicks the Play button on Welcome screen
+	public void OnPlayButtonClick() { // gets called automatically when the user clicks the Play button
 		startNewGame(); // resets the score, game state and stuff like that
 	}
 
@@ -79,8 +83,11 @@ public class GameController : MonoBehaviour {
 	// Game:
 
 	public void startNewGame() {
-		hideWelcomeScreen ();
-		showPlayer ();
+		if (gameOverScreenShowing)
+			showGameOverScreen (false);
+		else showWelcomeScreen (false);
+
+		showPlayer (true);
 		scoringSystem.resetScoringSystem ();
 		scoringSystem.showPlayCanvasComponents (true);
 		resetMaxDemonsOnScreenList ();
@@ -96,7 +103,7 @@ public class GameController : MonoBehaviour {
 		scoringSystem.gameState = GameState.GameOverScreen;
 		scoringSystem.showPlayCanvasComponents (false);
 		showSecondCameraScreen (false);
-		hidePlayer ();
+		showPlayer (false);
 		//stopCoroutines ();
 
 		// empty lists:
@@ -107,19 +114,20 @@ public class GameController : MonoBehaviour {
 
 	public void gameOver() {
 		endTheGame ();
-		setAppropriateGameOverMessage ();
+		setGameOverScreen ();
 		//scoringSystem.resetScoringSystem ();
 		// show game over screen
 		//TODO: some objects dont get destroyed, destroy them manually!
 	}
 		
-	void setAppropriateGameOverMessage() {
+	void setGameOverScreen() {
 		string appropriateMessage = getAppropriateGameOverText ();
-		string message = "Game Over!\n\n" + appropriateMessage;
-		Debug.Log ("Game Over!\n\n" +getAppropriateGameOverText());
+		gameOverMessageText.text = appropriateMessage;
+		showGameOverScreen (true);
+
 		//TODO: why doesnt it work??
 	}
-
+		
 	string getAppropriateGameOverText() {
 		if (tooManyDemonsKilled()) {
 			if (killedByDemons)
@@ -140,11 +148,8 @@ public class GameController : MonoBehaviour {
 		
 	// Welcome, game over screen:
 
-	void showWelcomeScreen() { welcomeScreen.SetActive (true); }
-	void hideWelcomeScreen() { welcomeScreen.SetActive (false); }
-
-	void showPlayer() { player.SetActive (true); }
-	void hidePlayer() { player.SetActive (false); }
+	void showWelcomeScreen(bool value) { welcomeScreen.SetActive (value); }
+	void showGameOverScreen(bool value) { gameOverScreen.SetActive (value); gameOverScreenShowing = value; }
 
 	// Camera:
 
@@ -228,7 +233,10 @@ public class GameController : MonoBehaviour {
 
 		instantiate ("ShieldPickUp", spawnPosition, spawnRotation);
 	}
-		
+
+	//Player:
+
+	void showPlayer(bool value) { player.SetActive (value); }
 
 	// Generic:
 
