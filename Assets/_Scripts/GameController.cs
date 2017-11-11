@@ -16,14 +16,14 @@ public class GameController : MonoBehaviour {
 	public Vector3 asteroidSpawnMin;
 	private static int asteroidCount = 0;
 	public int asteroidSpawnCount;
-	public int asteroidMaxOnScreen;
+	private int[] maxAsteroidsOnScreen = {7, 10, 14, 19, 23, 27};
 	public GameObject asteroid;
 	private static List<GameObject> asteroidsOnScreen;
 
 	// ENEMIES - DEMONS:
 	public GameObject demon;
 	private static int demonCount = 0;
-	public int howManyHasHeKilled = 0;
+	[HideInInspector] public int howManyHasHeKilled = 0;
 	private int[] maxDemonsOnScreen; // depends on the level
 	private static List<GameObject> demonsOnScreen;
 
@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour {
 
 	//Player:
 	public GameObject player;
-	public PlayerController playerController;
+	[HideInInspector] public PlayerController playerController;
 
 	// Score:
 	public Score scoringSystem;
@@ -221,16 +221,17 @@ public class GameController : MonoBehaviour {
 	public void emptyList(string name) {
 		List<GameObject> list = getCorrectList (name);
 
-		/*
-		List<GameObject> tempList = new List<GameObject> ();
+
+		GameObject[] tempArray = new GameObject[list.Count];
+		int i = 0;
 		foreach (GameObject objectInstance in list) {
-			tempList.Add (objectInstance);
+			tempArray [i] = objectInstance;
+			i++;
 		}
 		list.Clear ();
-		foreach (GameObject objectInstance in tempList) {
-			Destroy (objectInstance);
+		for (int j = 0; j < tempArray.Length ;j++) {
+			Destroy (tempArray[j]);
 		}
-		*/
 
 	}
 
@@ -274,7 +275,7 @@ public class GameController : MonoBehaviour {
 	int getMaxNumberOnScreen(string objectsName) {
 		switch (objectsName) {
 		case "Asteroid":
-			return asteroidMaxOnScreen;
+			return maxAsteroidsOnScreen[scoringSystem.getLevel () - 1];
 		case "Demon":
 			return maxDemonsOnScreen [scoringSystem.getLevel () - 1];
 		case "ShieldPickUp":
@@ -310,7 +311,7 @@ public class GameController : MonoBehaviour {
 	}
 }
 
-public struct GameOverText:string {
+public struct GameOverText {
 	public const string KilledByDemonsKilledToManyDemons = "I told you, killing them is not the way to go, " +
 		"try to make them accept you!\n\n" +
 		"I will give you one more chance:";
@@ -320,14 +321,19 @@ public struct GameOverText:string {
 	public const string KilledByAsteroid = "Nice job on trying to avoid killing the demons!\n\n " +
 		"Try again and also be more careful of rocks:";
 	public const string KilledByAsteroidKilledToManyDemons = "You got killed by an asteroid this time but you had that coming. " +
-		"You killed way to many of them, they turn very hostile " +
+		"You killed way too many of them, they turn very hostile " +
 		"when their family members are dying so be careful!\n\n" +
 		"I will give you one more chance:";
 
 	public string getAppropriateText(bool killedToManyDemons, bool killedByDemons) {
 		if (killedToManyDemons) {
-			if (killedByDemons) return GameOverText.KilledByDemonsKilledToManyDemons;
-			else return GameOverText.KilledByAsteroidKilledToManyDemons
+			if (killedByDemons)
+				return GameOverText.KilledByDemonsKilledToManyDemons;
+			else
+				return GameOverText.KilledByAsteroidKilledToManyDemons;
 		}
+		if (killedByDemons)
+			return GameOverText.KilledByDemons;
+		return GameOverText.KilledByAsteroid;
 	}
 }
