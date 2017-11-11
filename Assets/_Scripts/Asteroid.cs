@@ -41,7 +41,7 @@ public class Asteroid : MonoBehaviour {
 	void explode () {
 		GameObject explosionInstance = Instantiate (asteroidExplosion, this.transform.position, this.transform.rotation) as GameObject;
 		Destroy (explosionInstance, 0.5f);
-		Destroy (this.gameObject, 0.2f);
+		Destroy (this.gameObject);
 	}
 
 	void OnTriggerEnter(Collider collider) {

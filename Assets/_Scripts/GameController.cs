@@ -38,6 +38,7 @@ public class GameController : MonoBehaviour {
 
 	//Player:
 	public GameObject player;
+	private Vector3 originalPlayerPosition;
 	[HideInInspector] public PlayerController playerController;
 
 	// Score:
@@ -63,6 +64,7 @@ public class GameController : MonoBehaviour {
 		instantiateLists ();
 		resetMaxDemonsOnScreenList ();
 		playerController = player.GetComponent<PlayerController> ();
+		originalPlayerPosition = Vector3.zero;
 		shakeScript = mainCamera.GetComponent<Shake> ();
 		//TODO: create game over screen and play again button
 	}
@@ -87,6 +89,7 @@ public class GameController : MonoBehaviour {
 			showGameOverScreen (false);
 		else showWelcomeScreen (false);
 
+		player.transform.position = originalPlayerPosition;
 		showPlayer (true);
 		scoringSystem.resetScoringSystem ();
 		scoringSystem.showPlayCanvasComponents (true);
@@ -124,8 +127,6 @@ public class GameController : MonoBehaviour {
 		string appropriateMessage = getAppropriateGameOverText ();
 		gameOverMessageText.text = appropriateMessage;
 		showGameOverScreen (true);
-
-		//TODO: why doesnt it work??
 	}
 		
 	string getAppropriateGameOverText() {

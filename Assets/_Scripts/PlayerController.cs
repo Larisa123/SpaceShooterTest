@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour {
 
 	private GameObject shield;
 	public float shieldDuration;
-	public bool hasShieldOn = false;
+	[HideInInspector] public bool hasShieldOn = false;
 
 	// BULLET:
 	public GameObject bullet;
