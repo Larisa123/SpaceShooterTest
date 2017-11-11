@@ -58,6 +58,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
+		if (hasShieldOn && collision.collider.tag != "PlayerShieldPickUp") {
+			Destroy (collision.collider);
+			return;
+		}
+
 		if (collision.collider.tag == "DemonBullet") {
 			demonHitPlayer (collision.collider.gameObject);
 
@@ -94,10 +99,10 @@ public class PlayerController : MonoBehaviour {
 		rb.position = new Vector3 (transform.position.x, transform.position.y, 0.0f);
 	}
 
-	void explode () {
+	public void explode () {
 		GameObject explosionInstance = Instantiate (playerExplosion, this.transform.position, this.transform.rotation) as GameObject;
-		Destroy (this.gameObject);
-		Destroy (explosionInstance, 0.3f);
+		gameController.showPlayer (false);
+		Destroy (explosionInstance, 1.0f);
 	}
 
 	// Bullets:
@@ -184,7 +189,7 @@ public class PlayerController : MonoBehaviour {
 		showShield (false);
 	}
 
-	void showShield (bool value) {
+	public void showShield (bool value) {
 		shield.SetActive (value);
 		hasShieldOn = value;
 	}

@@ -80,8 +80,7 @@ public class GameController : MonoBehaviour {
 	public void OnPlayButtonClick() { // gets called automatically when the user clicks the Play button
 		startNewGame(); // resets the score, game state and stuff like that
 	}
-
-
+		
 	// Game:
 
 	public void startNewGame() {
@@ -90,6 +89,8 @@ public class GameController : MonoBehaviour {
 		else showWelcomeScreen (false);
 
 		player.transform.position = originalPlayerPosition;
+		if (playerController.hasShieldOn)
+			playerController.showShield (false);
 		showPlayer (true);
 		scoringSystem.resetScoringSystem ();
 		scoringSystem.showPlayCanvasComponents (true);
@@ -102,12 +103,15 @@ public class GameController : MonoBehaviour {
 		// call other functions
 	}
 
+	IEnumerator endTheGameAfterWait () {
+		yield return new WaitForSeconds (3.0f);
+		setGameOverScreen ();
+	} 
+
 	public void endTheGame() {
 		scoringSystem.gameState = GameState.GameOverScreen;
 		scoringSystem.showPlayCanvasComponents (false);
 		showSecondCameraScreen (false);
-		showPlayer (false);
-		//stopCoroutines ();
 
 		// empty lists:
 		foreach(string name in new string[3] {"Demon", "Asteroid", "ShieldPickUp"}) {
@@ -116,11 +120,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void gameOver() {
+		playerController.explode ();
 		endTheGame ();
-		setGameOverScreen ();
-		//scoringSystem.resetScoringSystem ();
-		// show game over screen
-		//TODO: some objects dont get destroyed, destroy them manually!
+		StartCoroutine(endTheGameAfterWait ());
 	}
 		
 	void setGameOverScreen() {
@@ -139,12 +141,6 @@ public class GameController : MonoBehaviour {
 		if (killedByDemons)
 			return GameOverText.KilledByDemons;
 		return GameOverText.KilledByAsteroid;
-	}
-
-	void stopCoroutines() {
-		//try { StopCoroutine (SpawnAsteroidsAndDemons()); } catch {}
-		//try { StopCoroutine (SpawnShieldPickUps()); } catch {}
-		//try { stopCoroutines(); } catch {Debug.Log("Coroutines werent properly stopped");}
 	}
 		
 	// Welcome, game over screen:
@@ -237,11 +233,14 @@ public class GameController : MonoBehaviour {
 
 	//Player:
 
-	void showPlayer(bool value) { player.SetActive (value); }
+	public void showPlayer(bool value) { player.SetActive (value); }
 
 	// Generic:
 
 	void instantiate(string name, Vector3 spawnPosition, Quaternion spawnRotation) {
+		if (scoringSystem.gameState != GameState.Playing)
+			return; // don't instantiate it if game ended!
+		
 		GameObject objectToInstantiate = (name == "Asteroid") ? asteroid : (name == "Demon") ? demon : shieldPickUp;
 		GameObject objectInstance = Instantiate (objectToInstantiate, spawnPosition, spawnRotation) as GameObject;
 
