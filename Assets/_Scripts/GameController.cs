@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+//TODO: try to make player explosion look better and last longer 
+//TODO: don't reduce points if asteroid passes him since this isn't a part of the rules
 
 enum TutorialState {Start, HowToMove, HowToShoot, Finished}
 
@@ -104,7 +106,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	IEnumerator endTheGameAfterWait () {
-		yield return new WaitForSeconds (3.0f);
+		yield return new WaitForSeconds (1.5f);
 		setGameOverScreen ();
 	} 
 

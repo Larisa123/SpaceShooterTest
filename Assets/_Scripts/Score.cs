@@ -19,6 +19,10 @@ public class Score : MonoBehaviour {
 	[SerializeField] private GameObject healthBarObject;
 	[SerializeField] private Image healthBar;
 
+	[SerializeField] private GameObject levelUpAnimation;
+	[SerializeField] private float animationDuration;
+
+
 	private static int level;
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
 
@@ -78,7 +82,7 @@ public class Score : MonoBehaviour {
 	}
 
 	void levelUpgraded() {
-		// TODO: show something on screen (as congratulations)
+		StartCoroutine(runLevelUpAnimation ());
 		gameController.playerController.increaseBulletType ();
 		StartCoroutine (gameController.SpawnShieldPickUps ());
 	}
@@ -87,6 +91,15 @@ public class Score : MonoBehaviour {
 		updateUI ();
 	}
 
+	IEnumerator runLevelUpAnimation() {
+		showLevelUpAnimation (true);
+		yield return new WaitForSeconds(animationDuration);
+		showLevelUpAnimation (false);
+	}
+
+	void showLevelUpAnimation(bool value) {
+		levelUpAnimation.SetActive (value);
+	}
 
 	// Player:
 
