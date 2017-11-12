@@ -44,7 +44,7 @@ public class Score : MonoBehaviour {
 	public int getScore () { return score; }
 
 	public void increaseScore(Vector3 fromPosition) {
-		runShowScoreChangeAnimation (plus: true, atPosition: fromPosition);
+		StartCoroutine(runShowScoreChangeAnimation (plus: true, atPosition: fromPosition));
 		score++; 
 		updateUI (); 
 		checkForUpgrades ();
@@ -53,7 +53,7 @@ public class Score : MonoBehaviour {
 	public void reduceScore(Vector3 fromPosition) { 
 		if (getScore () <= 0) 
 			return;
-		runShowScoreChangeAnimation (plus: false, atPosition: fromPosition);
+		StartCoroutine(runShowScoreChangeAnimation (plus: false, atPosition: fromPosition));
 		score--; 
 		updateUI (); 
 		checkForUpgrades ();
@@ -114,7 +114,7 @@ public class Score : MonoBehaviour {
 
 	public IEnumerator runShowScoreChangeAnimation(bool plus, Vector3 atPosition) {
 		showScoreChange (plus, true, atPosition);
-		yield return new WaitForSeconds(animationDuration);
+		yield return new WaitForSeconds(1.5f);
 		showScoreChange (plus, false, atPosition);
 	}
 

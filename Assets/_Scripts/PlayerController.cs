@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 //public struct BulletType {
 //}
 
-public enum BulletType {Regular, TwoRegular, ThreeRegular, ThreeRegularBigExplosion, SuperExplosion}
+public enum BulletType {Regular, TwoRegular, ThreeRegular, ThreeRegularQuick, ThreeRegularSuperQuick}
 
 public class PlayerController : MonoBehaviour {
 
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour {
 	public Transform bulletSpawn;
 	public Transform[] bulletSpawnTwoBullets;
 	public float fireRate;
+	public float originalFireRate;
 	private float nextFire;
 
 	//Game:
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Start() {
+		originalFireRate = fireRate;
 		//shieldPickUpSound = GetComponent<AudioSource> ();
 		shield = this.gameObject.transform.FindChild("Player Shield").gameObject;
 		rb = GetComponent<Rigidbody> ();
@@ -111,19 +113,22 @@ public class PlayerController : MonoBehaviour {
 		if (Time.time > nextFire ) {
 			nextFire = Time.time + fireRate;
 
-			if (bulletType == BulletType.Regular) {
+			if (bulletType == BulletType.Regular)
 				shootRegularBullet ();
-			} else if (bulletType == BulletType.TwoRegular) {
+			else if (bulletType == BulletType.TwoRegular)
 				shootTwoRegularBullets ();
-			} else if (bulletType == BulletType.ThreeRegular) {
-				shootRegularBullet ();
+			else {// otherwise both should be called but will have different fire times
+				shootRegularBullet (); 
 				shootTwoRegularBullets ();
-			} else if (bulletType == BulletType.ThreeRegularBigExplosion) {
-				shootRegularBullet ();
-				shootTwoRegularBullets ();
-				//shootBigExplosion (); tu je treba preverit se da je ze cas za novo eksplozijo, ne gre na vsaki nextFire
 			}
 		}
+	}
+
+	void increaseFireRate() {
+		fireRate -= 0.2f;
+	}
+	public void resetFireRate() {
+		fireRate = originalFireRate;
 	}
 
 	void shootRegularBullet() {
@@ -155,10 +160,12 @@ public class PlayerController : MonoBehaviour {
 			bulletType = BulletType.ThreeRegular;
 			break;
 		case BulletType.ThreeRegular:
-			bulletType = BulletType.ThreeRegularBigExplosion;
+			bulletType = BulletType.ThreeRegularQuick;
+			increaseFireRate ();
 			break;
-		case BulletType.ThreeRegularBigExplosion:
-			bulletType = BulletType.SuperExplosion;
+		case BulletType.ThreeRegularQuick:
+			bulletType = BulletType.ThreeRegularSuperQuick;
+			increaseFireRate ();
 			break;
 		default:
 			break;

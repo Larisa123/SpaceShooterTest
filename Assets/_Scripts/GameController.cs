@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour {
 	public Vector3 asteroidSpawnMin;
 	private static int asteroidCount = 0;
 	public int asteroidSpawnCount;
-	private int[] maxAsteroidsOnScreen = {7, 10, 14, 19, 23, 27};
+	private int[] maxAsteroidsOnScreen = {7, 11, 15, 20, 25, 30};
 	public GameObject asteroid;
 	private static List<GameObject> asteroidsOnScreen;
 
@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour {
 	public GameObject shieldPickUp;
 	private static int shieldPickUpCount = 0;
 	private static List<GameObject> shieldpickupsOnScreen;
-	private int[] maxShieldPickUpsOnScreen = {1, 2, 3, 4, 5, 7}; // depends on the level
+	private int[] maxShieldPickUpsOnScreen = {0, 1, 2, 3, 4, 5}; // depends on the level
 
 	//Player:
 	public GameObject player;
@@ -90,10 +90,15 @@ public class GameController : MonoBehaviour {
 			showGameOverScreen (false);
 		else showWelcomeScreen (false);
 
+		// Player to original position and rotation:
 		player.transform.position = originalPlayerPosition;
+		player.GetComponent<Rigidbody>().rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+
+		// If the shield stayed on we should disable it:
 		if (playerController.hasShieldOn)
 			playerController.showShield (false);
 		showPlayer (true);
+
 		scoringSystem.resetScoringSystem ();
 		scoringSystem.showPlayCanvasComponents (true);
 		resetMaxDemonsOnScreenList ();
@@ -123,6 +128,7 @@ public class GameController : MonoBehaviour {
 
 	public void gameOver() {
 		playerController.explode ();
+		playerController.resetFireRate ();
 		endTheGame ();
 		StartCoroutine(endTheGameAfterWait ());
 	}
