@@ -22,6 +22,9 @@ public class Score : MonoBehaviour {
 	[SerializeField] private GameObject levelUpAnimation;
 	[SerializeField] private float animationDuration;
 
+	[SerializeField] private GameObject plusChange;
+	[SerializeField] private GameObject minusChange;
+
 
 	private static int level;
 	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
@@ -39,10 +42,18 @@ public class Score : MonoBehaviour {
 	}
 
 	public int getScore () { return score; }
-	public void increaseScore() { score++; updateUI (); checkForUpgrades ();}
-	public void reduceScore() { 
+
+	public void increaseScore(Vector3 fromPosition) {
+		runShowScoreChangeAnimation (plus: true, atPosition: fromPosition);
+		score++; 
+		updateUI (); 
+		checkForUpgrades ();
+	}
+
+	public void reduceScore(Vector3 fromPosition) { 
 		if (getScore () <= 0) 
 			return;
+		runShowScoreChangeAnimation (plus: false, atPosition: fromPosition);
 		score--; 
 		updateUI (); 
 		checkForUpgrades ();
@@ -99,6 +110,22 @@ public class Score : MonoBehaviour {
 
 	void showLevelUpAnimation(bool value) {
 		levelUpAnimation.SetActive (value);
+	}
+
+	public IEnumerator runShowScoreChangeAnimation(bool plus, Vector3 atPosition) {
+		showScoreChange (plus, true, atPosition);
+		yield return new WaitForSeconds(animationDuration);
+		showScoreChange (plus, false, atPosition);
+	}
+
+	void showScoreChange(bool plus, bool value, Vector3 atPosition) {
+		if (plus) {
+			plusChange.transform.position = atPosition;
+			plusChange.SetActive (value);
+		} else {
+			minusChange.SetActive (value);
+			minusChange.transform.position = atPosition;
+		}
 	}
 
 	// Player:

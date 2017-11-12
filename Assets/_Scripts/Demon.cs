@@ -47,7 +47,7 @@ public class Demon : MonoBehaviour {
 
 	void bulletHitDemon(GameObject bulletInstance) {
 		//gameController.reduceCounterOf ("Demon");
-		gameController.scoringSystem.reduceScore ();
+		gameController.scoringSystem.reduceScore (this.transform.position);
 		Destroy (bulletInstance);
 		explode ();
 	}

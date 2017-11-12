@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour {
 		GameObject audioSourceObject = shieldPickUp.GetComponent<AudioSource> ().gameObject;
 		audioSourceObject.SetActive (true);
 		if (hasShieldOn) {
-			gameController.scoringSystem.increaseScore ();
+			gameController.scoringSystem.increaseScore (this.transform.position);
 			return;
 		}
 		Destroy (shieldPickUp, 0.2f);

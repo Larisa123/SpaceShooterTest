@@ -31,9 +31,6 @@ public class Asteroid : MonoBehaviour {
 
 	void checkIfAsteroidOutOfBounds() {
 		if (transform.position.z < asteroidDisapearZ) {
-			gameController.scoringSystem.reduceScore ();
-			if (gameController.scoringSystem.checkIfGameOver())
-				gameController.gameOver ();
 			Destroy (gameObject);
 		}
 	}
@@ -57,20 +54,18 @@ public class Asteroid : MonoBehaviour {
 	}
 
 	void playerHitAsteroid(GameObject bullet) {// player's bullet hit an asteroid
-		gameController.scoringSystem.increaseScore (); 
-		//gameController.reduceCounterOf ("Asteroid");
+		gameController.scoringSystem.increaseScore (this.transform.position); 
 		Destroy (bullet);
 		explode (); 
 	}
 
 	void asteroidHitShield() {
-		gameController.scoringSystem.increaseScore (); 
+		gameController.scoringSystem.increaseScore (this.transform.position); 
 		explode (); 
 	}
 
 	void asteroidHitPlayer(GameObject player) {// player's bullet hit an asteroid
-		gameController.gameOver();
-		//TODO:Destroy (player);
+		gameController.gameOver(); // this calls a method which also explodes the player
 		explode ();
 	}
 
