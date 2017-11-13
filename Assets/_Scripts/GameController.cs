@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-//TODO: try to make player explosion look better and last longer 
-//TODO: don't reduce points if asteroid passes him since this isn't a part of the rules
-
-enum TutorialState {Start, HowToMove, HowToShoot, Finished}
-
 public class GameController : MonoBehaviour {
 
 	// ASTEROIDS:
@@ -19,7 +14,7 @@ public class GameController : MonoBehaviour {
 	public Vector3 asteroidSpawnMin;
 	private static int asteroidCount = 0;
 	public int asteroidSpawnCount;
-	private int[] maxAsteroidsOnScreen = {7, 11, 15, 20, 25, 30};
+	private int[] maxAsteroidsOnScreen = new int[] {7, 11, 15, 20, 25, 30};
 	public GameObject asteroid;
 	private static List<GameObject> asteroidsOnScreen;
 
@@ -36,7 +31,7 @@ public class GameController : MonoBehaviour {
 	public GameObject shieldPickUp;
 	private static int shieldPickUpCount = 0;
 	private static List<GameObject> shieldpickupsOnScreen;
-	private int[] maxShieldPickUpsOnScreen = {0, 1, 2, 3, 4, 5}; // depends on the level
+	private int[] maxShieldPickUpsOnScreen = new int[] {0, 1, 2, 3, 4, 5}; // depends on the level
 
 	//Player:
 	public GameObject player;
@@ -68,7 +63,6 @@ public class GameController : MonoBehaviour {
 		playerController = player.GetComponent<PlayerController> ();
 		originalPlayerPosition = Vector3.zero;
 		shakeScript = mainCamera.GetComponent<Shake> ();
-		//TODO: create game over screen and play again button
 	}
 
 	void instantiateLists() {

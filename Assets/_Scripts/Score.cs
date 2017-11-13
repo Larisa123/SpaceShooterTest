@@ -27,7 +27,7 @@ public class Score : MonoBehaviour {
 
 
 	private static int level;
-	private int[] lvlUpgPoints = {5, 20, 50, 100, 200};
+	private int[] lvlUpgPoints = {5, 15, 30, 70, 200};
 
 	[SerializeField] private GameController gameController;
 	public GameState gameState;

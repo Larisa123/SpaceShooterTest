@@ -2,9 +2,6 @@
 using System.Collections;
 using UnityEngine.Audio;
 
-//public struct BulletType {
-//}
-
 public enum BulletType {Regular, TwoRegular, ThreeRegular, ThreeRegularQuick, ThreeRegularSuperQuick}
 
 public class PlayerController : MonoBehaviour {
@@ -21,7 +18,7 @@ public class PlayerController : MonoBehaviour {
 	public BulletType bulletType = BulletType.Regular;
 	public float bulletImpulse;
 
-
+	// Shield
 	private GameObject shield;
 	public float shieldDuration;
 	[HideInInspector] public bool hasShieldOn = false;
@@ -40,7 +37,6 @@ public class PlayerController : MonoBehaviour {
 
 	void Start() {
 		originalFireRate = fireRate;
-		//shieldPickUpSound = GetComponent<AudioSource> ();
 		shield = this.gameObject.transform.FindChild("Player Shield").gameObject;
 		rb = GetComponent<Rigidbody> ();
 
@@ -171,8 +167,16 @@ public class PlayerController : MonoBehaviour {
 			break;
 		} 
 	}
+
+	// Demon Bullets:
+
+	void demonHitPlayer(GameObject demonBullet) {
+		gameController.shakeCamera ();
+		Destroy (demonBullet);
+		gameController.scoringSystem.reducePlayersHealth ();
+	}
 		
-	// Pick Ups:
+	// Pick Up, Shield:
 
 	void shieldPickedUp(GameObject shieldPickUp) {
 		GameObject audioSourceObject = shieldPickUp.GetComponent<AudioSource> ().gameObject;
@@ -199,14 +203,5 @@ public class PlayerController : MonoBehaviour {
 	public void showShield (bool value) {
 		shield.SetActive (value);
 		hasShieldOn = value;
-	}
-
-
-	// Demon Bullets:
-
-	void demonHitPlayer(GameObject demonBullet) {
-		gameController.shakeCamera ();
-		Destroy (demonBullet);
-		gameController.scoringSystem.reducePlayersHealth ();
 	}
 }
