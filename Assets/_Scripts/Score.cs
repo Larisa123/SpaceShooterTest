@@ -198,14 +198,14 @@ public class Score : MonoBehaviour {
 public struct GameOverText {
 	public const string KilledByDemonsKilledToManyDemons = "I told you, killing them is not the way to go, " +
 		"try to make them accept you!\n\n" +
-		"I will give you one more chance:";
-	public const string KilledByDemons = "Great job on trying to avoid killing the demons! " +
-		"They seem to have not accepted you yet..\n\n" +
-		"Try again:";
+		"I will give you one more chance.";
+	public const string KilledByDemons = "Great job on trying to avoid killing the demons!\n\n" +
+		"Unfortunately they seem to have not accepted you yet..\n\n" +
+		"Try again!";
 	public const string KilledByAsteroid = "Nice job on trying to avoid killing the demons!\n\n " +
-		"Try again and also be more careful of rocks:";
-	public const string KilledByAsteroidKilledToManyDemons = "You got killed by an asteroid this time but you had that coming. " +
+		"Try again and also be more careful of rocks!:";
+	public const string KilledByAsteroidKilledToManyDemons = "You got killed by an asteroid this time but you had that coming.\n\n" +
 		"You killed way too many of them, they turn very hostile " +
 		"when their family members are dying so be careful!\n\n" +
-		"I will give you one more chance:";
+		"I will give you one more chance.";
 }
